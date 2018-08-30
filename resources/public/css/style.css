@@ -1,0 +1,23 @@
+/* some style */
+
+* { box-sizing: border-box; }
+
+.tile {
+  width: 5px;
+  height: 5px;
+  border: 1px solid grey;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.tile-row {
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 5px;
+}
+
+.alive {
+  background-color: black;
+}
