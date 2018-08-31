@@ -1,16 +1,36 @@
 (ns life.core
     (:require [reagent.core :as reagent :refer [atom]]
-              [com.rpl.specter :as s]))
+              [reagent.ratom :refer [run! cursor]]
+              [com.rpl.specter :as s]
+              [life.viewport :refer [viewport]]
+              [re-frisk.core :refer [enable-frisk! add-data]]))
 
 (enable-console-print!)
+(enable-frisk! {:x 100 :y 500})
 
 ; Board is set of x,y tuples, which are implicitly alive if they exist in the set
 (def test-board #{[0 0] [1 0] [2 0] [2 1] [1 2]})
 
-(defonce app-state
+(def default-size 10) ;px
+
+(defonce !app-db
  (atom
   {:board test-board
-   :viewport [[-100 -100] [100 100]]}))
+   :updater {:interval 500}
+   :handlers {:interval {}}
+   :viewport {:canvas nil
+              :window [100 100]
+              :offset [0 0]
+              :scale 1.0}}))
+
+(add-data :app-db !app-db)
+
+(defn set-interval! [key interval function]
+ (swap! !app-db update-in [:handlers :interval key]
+  (fn [old-interval-id]
+   (when (number? old-interval-id)
+    (js/clearInterval old-interval-id))
+   (js/setInterval function interval))))
 
 (defn get-neighbors
  "Returns the set of all eight adjacent points for the given coord, not including the coord itself."
@@ -59,29 +79,31 @@
  
   
 (defn header []
- [:h1 "Life"])
-
-(defn tile [alive?] [(if alive? :div.tile.alive :div.tile)])
-
-(defn board-view [board [[x0 y0] [x1 y1]]]
- (into [:div.board-view]
-  (for [y (range y0 (inc y1))]
-   (into [:div.tile-row]
-    (for [x (range x0 (inc x1))] [tile (contains? board [x y])])))))
+ [:nav#header [:h1 "Life"]])
 
 (defn app []
- (let [state @app-state] 
+ (let [state @!app-db] 
   [:div#container
-   [:nav [header]]
-   [:main [board-view (:board state) (:viewport state)]]]))
+   [header]
+   [:main [viewport !app-db]]]))
 
 (reagent/render-component [app]
                           (. js/document (getElementById "app")))
 
-(js/setInterval (fn [] (swap! app-state update :board next-board)) 500)
+(defn step-board! []
+ (swap! !app-db update :board next-board))
 
-(defn on-js-reload [])
-  ;; optionally touch your app-state to force rerendering depending on
+(defn register-update-loop! []
+ (let [!interval (cursor !app-db [:updater :interval])]
+  (run! (set-interval! :update-loop @!interval step-board!))))
+
+(register-update-loop!)
+
+(defn on-js-reload []
+ (register-update-loop!) ; todo -- is this necessary?
+ (swap! !app-db assoc :board test-board)) ; reset board state
+ 
+  ;; optionally touch your !app-db to force rerendering depending on
   ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
+  ;; (swap! !app-db update-in [:__figwheel_counter] inc)
 
