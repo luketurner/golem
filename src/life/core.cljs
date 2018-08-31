@@ -3,10 +3,12 @@
               [reagent.ratom :refer [run! cursor]]
               [com.rpl.specter :as s]
               [life.viewport :refer [viewport]]
-              [re-frisk.core :refer [enable-frisk! add-data]]))
+              [re-frisk.core :as frisk]))
+
+(def ^boolean debug? ^boolean js/goog.DEBUG)
+(when debug? (print "debug mode enabled"))
 
 (enable-console-print!)
-(enable-frisk! {:x 100 :y 500})
 
 ; Board is set of x,y tuples, which are implicitly alive if they exist in the set
 (def test-board #{[0 0] [1 0] [2 0] [2 1] [1 2]})
@@ -23,7 +25,7 @@
               :offset [0 0]
               :scale 1.0}}))
 
-(add-data :app-db !app-db)
+
 
 (defn set-interval! [key interval function]
  (swap! !app-db update-in [:handlers :interval key]
@@ -87,20 +89,27 @@
    [header]
    [:main [viewport !app-db]]]))
 
-(reagent/render-component [app]
-                          (. js/document (getElementById "app")))
+(defn render []
+ (reagent/render-component
+  [app]
+  (. js/document (getElementById "app"))))
 
 (defn step-board! []
  (swap! !app-db update :board next-board))
 
-(defn register-update-loop! []
+(defn run-update-loop! []
  (let [!interval (cursor !app-db [:updater :interval])]
   (run! (set-interval! :update-loop @!interval step-board!))))
 
-(register-update-loop!)
+(when debug?
+  (frisk/enable-frisk! {:x 100 :y 500})
+  (frisk/add-data :app-db !app-db))
+
+(render)
+(run-update-loop!)
 
 (defn on-js-reload []
- (register-update-loop!) ; todo -- is this necessary?
+ (run-update-loop!) ; todo -- is this necessary?
  (swap! !app-db assoc :board test-board)) ; reset board state
  
   ;; optionally touch your !app-db to force rerendering depending on

@@ -41,13 +41,15 @@
                            :source-map-timestamp true
                            ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
                            ;; https://github.com/binaryage/cljs-devtools
-                           :preloads [devtools.preload re-frisk.preload]}}
+                           :preloads [devtools.preload re-frisk.preload]
+                           :closure-defines {goog.DEBUG true}}}
                ;; This next build is a compressed minified build for
                ;; production. You can build this with:
                ;; lein cljsbuild once min
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/life.js"
+                           :closure-defines {goog.DEBUG false}
                            :main life.core
                            :optimizations :advanced
                            :pretty-print false}}]}
