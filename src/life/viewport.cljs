@@ -3,7 +3,7 @@
            [reagent.core :as r]
            [reagent.ratom :refer [cursor run!]]
            [life.math :refer [ceil floor]]  
-           [life.canvas :refer [fill-rect! stroke-rect! stroke-lines!]]))
+           [life.canvas :refer [fill-rect! stroke-lines!]]))
 
 (def base-length 10) ; length of a side of a tile, in px
 
