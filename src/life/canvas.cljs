@@ -8,8 +8,9 @@
  (set! (.-strokeStyle ctx) style)
  (.strokeRect ctx x y width height))
 
-(defn stroke-line! [ctx [x0 y0] [x1 y1] style]
+(defn stroke-lines! [ctx coord-pairs style]
  (set! (.-strokeStyle ctx) style)
- (.moveTo ctx x0 y0)
- (.lineTo ctx x1 y1)
+ (doseq [[[x0 y0] [x1 y1]] coord-pairs]
+  (.moveTo ctx x0 y0)
+  (.lineTo ctx x1 y1))
  (.stroke ctx))

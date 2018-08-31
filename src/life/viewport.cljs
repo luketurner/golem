@@ -3,7 +3,7 @@
            [reagent.core :as r]
            [reagent.ratom :refer [cursor run!]]
            [life.math :refer [ceil floor]]  
-           [life.canvas :refer [fill-rect! stroke-rect! stroke-line!]]))
+           [life.canvas :refer [fill-rect! stroke-rect! stroke-lines!]]))
 
 (def base-length 10) ; length of a side of a tile, in px
 
@@ -30,10 +30,19 @@
        y (- oy (* len cy))]
   (if alive?
    (fill-rect! ctx x y len len "black")
-   (stroke-rect! ctx x y len len "grey"))))
+   (stroke-rect! ctx x y len len "rgb(210, 210, 210)"))))
 
 (defn tile-in-range? [[[x0 y0] [x1 y1]] [x y]]
  (and (<= x0 x x1) (<= y0 y y1)))
+
+(defn draw-grid! [ctx viewport]
+ (let [[ox oy] (calc-origin viewport)
+       {:keys [scale] [wx wy] :window} viewport
+       len (* scale base-length)
+       [[x0 y0] [x1 y1]] (calc-tile-range viewport)
+       column-lines (->> (range x0 (inc x1)) (map #(+ (* len %) ox)) (map #(vector [% 0] [% wy])))
+       row-lines (->> (range y0 (inc y1)) (map #(+ (* len %) oy)) (map #(vector [0 %] [wx %])))]
+  (stroke-lines! ctx (into row-lines column-lines) "rgb(210, 210, 210)")))
 
 (defn draw-viewport! [canvas viewport board]
  (let [{:keys [scale]} viewport
@@ -42,6 +51,7 @@
        tile-range (calc-tile-range viewport)
        board (filter #(tile-in-range? tile-range %) board)]
   (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+  (draw-grid! ctx viewport) ; TODO -- optimize into another canvas element to avoid redraws
   (doseq [tile board] (draw-tile! ctx viewport tile true)))) 
 
 (defn resize-window! [!viewport canvas]
