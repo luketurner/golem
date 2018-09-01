@@ -26,7 +26,7 @@
 (defn init-app!
  []
  (update-loop/run-loop! !app-db #(board/step! !app-db))
- (swap! !app-db assoc :board test-board))
+ (board/push-board! !app-db test-board))
 
 
 (when debug?

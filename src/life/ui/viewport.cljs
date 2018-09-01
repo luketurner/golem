@@ -1,8 +1,9 @@
 (ns life.ui.viewport
  (:require [com.rpl.specter :as s]
            [reagent.core :as r]
-           [reagent.ratom :refer [cursor run!]]
-           [life.math :refer [ceil floor]]  
+           [reagent.ratom :refer [cursor run! reaction]]
+           [life.math :refer [ceil floor]]
+           [life.board :refer [get-current-board update-board!]]
            [life.canvas :refer [fill-rect! stroke-lines!]]))
 
 (def base-length 10) ; length of a side of a tile, in px
@@ -97,8 +98,8 @@
 
 (defn toggle-tile!
  "Mutates board cursor by inserting tile, or removing it if it already exists."
- [!board tile]
- (swap! !board
+ [!db tile]
+ (update-board! !db
   (fn [old-board] 
    (if (contains? old-board tile)
     (disj old-board tile)
@@ -109,9 +110,8 @@
  "Contains logic for handling click events anywhere on the viewport canvas.
   Uses the pixel (x,y) coordinates of the click event to determine the board tile
   that the user clicked on, and toggle that tile."
- [click-event !viewport !canvas !board]
+ [click-event !viewport !canvas !db]
  (let [canvas @!canvas
-       board @!board
        {:keys [scale] :as viewport} @!viewport
        tile-width (* scale base-length)
        [origin-x origin-y] (calc-origin viewport)
@@ -121,7 +121,7 @@
        tile-x ((if (neg? tile-x) floor ceil) tile-x)
        tile-y ((if (neg? tile-y) floor ceil) tile-y)]
   (print "detected click:" tile-x tile-y)
-  (toggle-tile! !board [tile-x tile-y])))
+  (toggle-tile! !db [tile-x tile-y])))
 
 (defn component
  "Reagent component for the viewport, which provides 'view' into the conceptually infinite 'board'.
@@ -132,7 +132,7 @@
   the canvas in response to relevant state changes."
  [!app-db]
  (let [!viewport (cursor !app-db [:viewport])
-       !board (cursor !app-db [:board])
+       !board (reaction (get-current-board !app-db))
        !canvas (cursor !viewport [:canvas])]
   (run-resize-viewport! !viewport !canvas)
   (run-redraw-viewport! !viewport !canvas !board)
@@ -142,5 +142,5 @@
     (fn [app-db]
      [:canvas#viewport
       {:ref #(reset! !canvas %)
-       :on-click #(handle-click-event! % !viewport !canvas !board)}])}))) 
+       :on-click #(handle-click-event! % !viewport !canvas !app-db)}])}))) 
     

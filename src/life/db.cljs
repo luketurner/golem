@@ -1,9 +1,10 @@
 (ns life.db
-    (:require [reagent.core :as reagent :refer [atom]]))
+    (:require [reagent.core :as reagent :refer [atom]]
+              [life.board :refer [default-state] :rename {default-state board-state}]))
 
 (defonce !app-db
  (atom
-  {:board #{}
+  {:board board-state
    :updater {:interval 500
              :enabled true}
    :handlers {:interval {}}
