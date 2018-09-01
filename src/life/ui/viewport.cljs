@@ -1,4 +1,4 @@
-(ns life.viewport
+(ns life.ui.viewport
  (:require [com.rpl.specter :as s]
            [reagent.core :as r]
            [reagent.ratom :refer [cursor run!]]
@@ -123,7 +123,7 @@
   (print "detected click:" tile-x tile-y)
   (toggle-tile! !board [tile-x tile-y])))
 
-(defn viewport
+(defn component
  "Reagent component for the viewport, which provides 'view' into the conceptually infinite 'board'.
   The view is defined by an offset (where the offset 0,0 indicates the origin is in the center of the view)
   and by a scale (or 'zoom') factor.
