@@ -1,12 +1,14 @@
 (ns life.db
     (:require [reagent.core :as reagent :refer [atom]]
               [life.board :refer [default-state] :rename {default-state board-state}]
-              [life.ui.viewport :refer [default-state] :rename {default-state viewport-state}]))
+              [life.ui.viewport :refer [default-state] :rename {default-state viewport-state}]
+              [life.board-manager :refer [default-state] :rename {default-state board-manager-state}]))
 
 ; default (or initial) state for the app db.
 ; note: uses def instead of defonce so updates to default-state are live-reloaded.
 (def default-state 
  {:board board-state
+  :board-manager board-manager-state
   :update-loop {:interval 500
                 :enabled true}
   :handlers {:interval {}}

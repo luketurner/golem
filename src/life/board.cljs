@@ -9,9 +9,9 @@
 ; Application state for the board module. With this structure,
 ; the head of the :history list represents the current board state,
 ; the 2nd element is the previous state, and so forth.
-(defonce default-state {:history '()
-                        :min-history 75
-                        :max-history 100})
+(def default-state {:history '()
+                    :min-history 75
+                    :max-history 100})
 
 
 (defn update-board!

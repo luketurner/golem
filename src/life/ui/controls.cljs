@@ -1,12 +1,16 @@
 (ns life.ui.controls
-  (:require [life.update-loop :as update-loop]))
+  (:require [life.update-loop :as update-loop]
+            [life.board :as board]
+            [life.board-manager :as board-manager]))
 
 (defn component [!db]
  [:div.controls
   [:div.cmds-label "Controls: "]
   [:div.cmds
-   
-   [:button {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]]
+   [:button {:on-click #(board/undo! !db)} "undo"]
+   [:button {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]
+   [:button {:on-click #(board-manager/push-selected-board! !db)} "reset"]]
+   ; [:button {:on-click #(...)} "load"]]
   [:div.rates-label "Update Rate: "]
   [:div.rates
    [:button {:on-click #(update-loop/inc-rate! !db 1000)} "--"]

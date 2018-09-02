@@ -7,7 +7,8 @@
               [life.ui.app :as app]
               [life.board :as board]
               [life.rle :as rle]
-              [life.update-loop :as update-loop]))
+              [life.update-loop :as update-loop]
+              [life.board-manager :as board-manager]))
 
 (enable-console-print!)
 
@@ -28,7 +29,7 @@
   Is idempotent and should be called on every code reload, since hot reloading won't magically work for it."
  []
  (update-loop/run-loop! !app-db #(board/step! !app-db))
- (board/push-board! !app-db (rle/rle->board "x = 3, y = 3\nbo$2bo$3o!"))) ; Temporary app state for testing
+ (board-manager/push-selected-board! !app-db))
 
 (defn on-js-reload [] (init-app!)) ; reset app state+handlers
 
