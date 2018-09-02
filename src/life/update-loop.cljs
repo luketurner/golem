@@ -18,10 +18,14 @@
 (defn inc-rate! [!db ms]
  (swap! !db update-in [:update-loop :interval] #(max 0 (+ % ms))))
 
+(defn with-timer [tag func]
+ (print (str "[" tag "]"))
+ #(time (func)))
+
 (defn run-loop! [!db update-fn]
  (let [!interval (cursor !db [:update-loop :interval])
        !enabled? (cursor !db [:update-loop :enabled])]
   (run!
    (if @!enabled?
-    (set-interval! :update-loop @!interval update-fn)
+    (set-interval! :update-loop @!interval (with-timer "update-loop" update-fn))
     (clear-interval! :update-loop)))))
