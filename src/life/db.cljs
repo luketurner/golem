@@ -12,7 +12,8 @@
   :update-loop {:interval 500
                 :enabled true}
   :handlers {:interval {}}
-  :viewport viewport-state})
+  :viewport viewport-state
+  :ui {:sidebar {:open false}}})
 
 ; App DB holds *all* application state, even ultra-low-level state like interval IDs.
 ; This allows all state to be introspected by re-frisk, providing maximum visibility.

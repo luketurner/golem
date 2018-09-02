@@ -1,7 +1,7 @@
 /* some style */
 
 * { box-sizing: border-box; }
-body, html, #app { height:100%; margin: 0; overflow: hidden; }
+body, html, #app { height:100%; margin: 0 }
 
 
 body {
@@ -14,7 +14,9 @@ body {
 }
 
 .app-container { display: grid; grid: "header" 50px "main" 1fr "footer" 50px; min-height: 100%; }
+.app-container--sidebar { grid: "header header" 50px "sidebar main" 1fr "footer footer" 50px / 1fr 3fr; }
 .app-header-container { grid-area: header; }
+.app-sidebar-container { grid-area: sidebar; }
 .app-main-container { grid-area: main; padding: 5px 0 5px 0; }
 .app-footer-container { grid-area: footer; }
 
@@ -31,6 +33,13 @@ header > .controls-container { grid-area: controls; }
 .controls .cmds-label { grid-area: cmds-label; }
 .controls .rates { grid-area: rates; }
 .controls .rates-label { grid-area: rates-label; }
+
+/* sidebar */
+.sidebar .saved-board { display: grid; grid: "name coords" 2fr "rle rle" 1fr; cursor: pointer; padding: 0.5rem; border-top: 1px solid rgb(210, 210, 210); }
+.sidebar .saved-board:hover { background-color: rgba(0, 0, 0, 0.05); }
+.sidebar .saved-board > .name { grid-area: name; font-size: 1.1rem; }
+.sidebar .saved-board > .coords { grid-area: coords; font-size: 0.9rem; color: rgb(100, 100, 100); }
+.sidebar .saved-board > .rle { grid-area: rle; font-size: 0.9rem; color: rgb(100, 100, 100); }
 
 /* Main settings */
 #viewport { width: 100%; height: 100%; }

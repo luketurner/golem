@@ -14,7 +14,9 @@
 (defn rle->boardspec [rle name] {:name (or name "Unnamed Board") :rle rle :board (rle/rle->board rle)})
 
 (def default-premades
- [(rle->boardspec "x = 3, y = 3\nbo$2bo$3o!" "Glider")])
+ [(rle->boardspec "x = 3, y = 3\nbo$2bo$3o!" "Glider")
+  (rle->boardspec "x = 36, y = 9, rule = B3/S23\n24bo11b$22bobo11b$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o14b$2o8b
+o3bob2o4bobo11b$10bo5bo7bo11b$11bo3bo20b$12b2o!" "Gosper Glider Gun")])
 
 (def default-state {:selected (first default-premades)
                     :saved default-premades})

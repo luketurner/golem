@@ -39,6 +39,12 @@
  (let [[m x y] (re-find #"x = (\d+), y = (\d+)" rle-head)]
   [x y]))
 
+(defn split-rle-str [rle-str]
+ (filter #(->> % (first) (= "#") (not)) (string/split-lines rle-str)))
+
+
+
+
 ; TODO -- this doesn't handle missing $ characters, I think?
 (defn rle->board
  "Given an RLE string, converts it into a Board (HashSet of x/y pairs).
@@ -47,7 +53,7 @@
   a result, the patterns are mirrored around the y-axis, and will appear
   to the bottom right of the origin."
  [rle-str]
- (let [[rle-head rle-pattern] (filter #(->> % (first) (= "#") (not)) (string/split-lines rle-str))
+ (let [[rle-head rle-pattern] (split-rle-str rle-str)
        [width height] (parse-rle-head rle-head)
        tag-list (parse-rle-pattern rle-pattern)
        reducer (fn [{:keys [x y board] :as acc} {:keys [tag count]}]

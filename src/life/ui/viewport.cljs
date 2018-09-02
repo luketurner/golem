@@ -76,12 +76,16 @@
 
 
 (defn run-resize-viewport!
- "Calls resize-viewport! in a run-loop so that it reactively re-runs if any changes are made to the parameters."
- [!viewport !canvas]
+ "Calls resize-viewport! in a run-loop so that it reactively re-runs if any changes are made to the parameters.
+  Note: Because resize events are not triggered by JS DOM redraws, we also want to listen for changes to
+  the app UI state. This is kludgy, but a workaround for the lack of element-level resize events."
+ [!viewport !canvas !to-watch]
  (run!
-  (when-let [canvas @!canvas]
-   (.addEventListener js/window "resize" #(resize-viewport! !viewport canvas))
-   (resize-viewport! !viewport canvas))))
+  (let [unused @!to-watch] ; deref !to-watch even though we don't care about the value
+   (when-let [canvas @!canvas]
+    (print "resizing")
+    (.addEventListener js/window "resize" #(resize-viewport! !viewport canvas))
+    (resize-viewport! !viewport canvas)))))
 
 (defn run-redraw-viewport!
  "Calls redraw-viewport! in a run-loop so that it reactively re-runs if any changes are made to the parameters."
@@ -138,8 +142,9 @@
  [!app-db]
  (let [!viewport (cursor !app-db [:viewport])
        !board (reaction (get-current-board !app-db))
-       !canvas (cursor !viewport [:canvas])]
-  (run-resize-viewport! !viewport !canvas)
+       !canvas (cursor !viewport [:canvas])
+       !ui (cursor !app-db [:ui])]
+  (run-resize-viewport! !viewport !canvas !ui)
   (run-redraw-viewport! !viewport !canvas !board)
   (r/create-class ; TODO -- no longer needs to be a create-class call? change to type 2?
    {:display-name "viewport"
@@ -147,5 +152,5 @@
     (fn [app-db]
      [:canvas#viewport
       {:ref #(reset! !canvas %)
-       :on-click #(handle-click-event! % !viewport !canvas !app-db)}])}))) 
+       :on-click #(handle-click-event! % !viewport !canvas !app-db)}])})))
     
