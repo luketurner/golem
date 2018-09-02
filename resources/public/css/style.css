@@ -1,8 +1,8 @@
 /* some style */
 
 * { box-sizing: border-box; }
+body, html, #app { height:100%; margin: 0; overflow: hidden; }
 
-@import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
 body {
   font: 16px 'PT Sans', sans-serif;
@@ -10,48 +10,30 @@ body {
 }
 
 #app {
-  max-width: 1280px;
   position: relative;
-  margin: 0 auto 0 auto;
-  border: 1px solid rgb(210, 210, 210);
-  border-radius: 1rem;
-  -webkit-box-shadow: 0px 0px 15px 2px rgba(200,200,200,0.5);
-  -moz-box-shadow: 0px 0px 15px 2px rgba(200,200,200,0.5);
-  box-shadow: 0px 0px 15px 2px rgba(200,200,200,0.5);
 }
 
+.app-container { display: grid; grid: "header" 50px "main" 1fr "footer" 50px; min-height: 100%; }
+.app-header-container { grid-area: header; }
+.app-main-container { grid-area: main; padding: 5px 0 5px 0; }
+.app-footer-container { grid-area: footer; }
+
+/* Header settings */
+header { height: 100%; display: grid; grid: "controls title help" 2fr "controls subtitle help" 1fr / 1fr 1fr 1fr; }
+header a { color: inherit; text-decoration: inherit; }
+header > .title { grid-area: title; height: 100%; margin: 0; font-size: 1.5rem; text-align: center; }
+header > .subtitle { grid-area: subtitle; text-align: center; margin: 0; }
+header > .controls-container { grid-area: controls; }
+
+/* controls */
+.controls { display: grid; grid: "cmds-label cmds" 1fr "rates-label rates" 1fr; }
+.controls .cmds { grid-area: cmds; }
+.controls .cmds-label { grid-area: cmds-label; }
+.controls .rates { grid-area: rates; }
+.controls .rates-label { grid-area: rates-label; }
+
+/* Main settings */
 #viewport { width: 100%; height: 100%; }
 
-#header {
-  position: absolute;
-  top: 0;
-  left: calc((100% - 10em) / 2);
-  width: 10em;
-  background-color: rgb(240, 240, 240, 0.75);
-  text-align: center;
-}
-
-#header h1 {
-  margin: 0 0 0.25em 0;
-  font-weight: normal;
-}
-
-.tile {
-  width: 5px;
-  height: 5px;
-  border: 1px solid grey;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
-}
-
-.tile-row {
-  display: block;
-  margin: 0;
-  padding: 0;
-  height: 5px;
-}
-
-.alive {
-  background-color: black;
-}
+/* Footer settings */
+footer { text-align: center; }

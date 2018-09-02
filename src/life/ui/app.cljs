@@ -1,10 +1,16 @@
 (ns life.ui.app
  (:require [life.ui.viewport :as viewport]
-           [life.ui.controls :as controls]))
+           [life.ui.header :as header]))
 
-(defn component [!app-db]
- (let [state @!app-db] 
-  [:div#container
-   [controls/component !app-db]
-   [:main
-    [viewport/component !app-db]]]))
+(defn footer
+ [!db]
+ [:footer
+  [:span "Copyright 2018 Luke Turner"]])
+
+(defn component [!db]
+ (let [state @!db] 
+  [:div.app-container
+   [:div.app-header-container [header/component !db]]
+   ; [controls/component !app-db]
+   [:div.app-main-container [viewport/component !db]]
+   [:div.app-footer-container [footer !db]]]))

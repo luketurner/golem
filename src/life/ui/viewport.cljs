@@ -8,6 +8,11 @@
 
 (def base-length 10) ; length of a side of a tile, in px
 
+(defonce default-state {:canvas nil
+                        :window [100 100]
+                        :offset [0 0]
+                        :scale 1.0})
+
 (defn calc-origin
  "Given a viewport settings hash, will calculate the location of the top-left corner of the origin (0,0) tile."
  [{[wx wy] :window [ox oy] :offset}]
