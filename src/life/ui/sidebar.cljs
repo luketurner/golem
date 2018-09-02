@@ -1,6 +1,6 @@
 (ns life.ui.sidebar
  (:require [reagent.ratom :refer [cursor]]
-           [life.rle :as rle]
+           [life.interop.rle :as rle]
            [life.board-manager :as board-manager]
            [life.board :as board]))  
  
@@ -16,9 +16,9 @@
  (let [saved-boards (board-manager/get-saved !db)]
   (into [:div.sidebar [:h1 "Saved Boards"]]
    (for [{:keys [name rle board]} saved-boards]
-    (let [[rle-head rle-pattern] (rle/split-rle-str rle)]
+    (let [{ [dim-x dim-y] :dimensions pattern :pattern} (rle/parse-rle rle)]
      [:div.saved-board {:on-click #(board/push-board! !db board)}
       [:div.name name]
-      [:div.coords rle-head]
-      [:div.rle rle-pattern]])))))
+      [:div.coords (str "x: " dim-x ", y: " dim-y)]
+      [:div.rle pattern]])))))
    

@@ -1,7 +1,7 @@
 (ns life.board-manager
  (:require [reagent.ratom :refer [cursor]]
            [life.board :as board]
-           [life.rle :as rle]))
+           [life.interop.rle :as rle]))
 
 ; Module for maintaining a list of saved boards that can be loaded later.
 ; Used for three things:

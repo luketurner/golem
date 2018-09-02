@@ -6,7 +6,6 @@
               [life.db :refer [!app-db]]
               [life.ui.app :as app]
               [life.board :as board]
-              [life.rle :as rle]
               [life.update-loop :as update-loop]
               [life.board-manager :as board-manager]))
 
