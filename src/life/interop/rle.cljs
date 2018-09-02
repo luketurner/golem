@@ -1,6 +1,7 @@
 (ns life.interop.rle
- (:require [clojure.string :as string]))
-
+ (:require [clojure.string :as string]
+           [life.util :as util]))
+ 
 ; handles encoding/decoding RLE (run-length-encoded) Life patterns.
 ; See: http://www.conwaylife.com/w/index.php?title=Run_Length_Encoded
 
@@ -21,11 +22,6 @@
            "$" :eol
            "!" :eop})
 
-(defn parse-int
- [string default]
- (let [parsed (js/parseInt string 10)]
-  (if (js/isNaN parsed) default parsed)))
-
 (defn parse-rle-pattern
  "Parses an RLE pattern into its \"AST\": a seq of HashMaps, one per token.
   Note that this is not a perfect parser in that if a pattern has numbers before the ! (e.g. b12!),
@@ -33,42 +29,16 @@
  [rle-pattern]
  (->> rle-pattern
   (re-seq #"\s*(?:(\d*)([bo$!]))")
-  (map (fn [[m c t]] {:tag (tags t) :count (parse-int c 1)}))))
+  (map (fn [[m c t]] {:tag (tags t) :count (util/parse-int c 1)}))))
 
 (defn parse-rle-head
  [rle-head]
  (let [[m x y] (re-find #"x = (\d+), y = (\d+)" rle-head)]
-  [(js/parseInt x 10) (js/parseInt y 10)]))
-
-(defn split-rle-str [rle-str]
- (filter #(->> % (first) (= "#") (not)) (string/split-lines rle-str)))
-
-(defn parse-rle-comments
- [rle-data rle-str]
- [])
+  [(util/parse-int x) (util/parse-int y)]))
 
 (defn get-#-value [line] (string/trim (.slice line 2)))
 
 (defn standardize-pattern [pattern] (string/replace pattern #"\s+" ""))
-
-; TODO -- this doesn't handle missing $ characters, I think?
-(defn rle->board
- "Given an RLE string, converts it into a Board (HashSet of x/y pairs).
-  Note that RLE is defined as reading left-to-right and top-to-bottom,
-  whereas in our coordinate system things are numbered bottom-to-top. As
-  a result, the patterns are mirrored around the y-axis, and will appear
-  to the bottom right of the origin."
- [rle-str]
- (let [[rle-head rle-pattern] (split-rle-str rle-str)
-       [width height] (parse-rle-head rle-head)
-       tag-list (parse-rle-pattern rle-pattern)
-       reducer (fn [{:keys [x y board] :as acc} {:keys [tag count]}]
-                (let [is-tile-tag? (contains? #{:alive :dead} tag)]
-                 (if (= tag :eoc) acc
-                  {:board (if (= tag :alive) (->> x (+ count) (range x) (map (fn [x] [x (- y)])) (into board)) board)
-                   :x (if is-tile-tag? (+ x count) 0)
-                   :y (if (= tag :eol) (+ y 1) y)})))]
-  (:board (reduce reducer {:x 0 :y 0 :board #{}} tag-list))))
 
 ; TODO -- this doesn't handle missing $ characters, I think?
 (defn pattern-ast->board
@@ -93,7 +63,7 @@
   # lines can be interleaved into the pattern with no ill effects. However,
   it should at least be enough to parse the usual RLE out there."
  [rle-str]
- (loop [lines (string/split-lines rle-str)
+ (loop [lines (->> rle-str (string/split-lines) (map string/trim))
         data {}]
   (if-let [line (first lines)]
    (recur
@@ -110,7 +80,7 @@
      ("#P" "#R") (assoc data :offset (->> line 
                                           (get-#-value)
                                           (#(string/split % " "))
-                                          (map #(js/parseInt % 10))
+                                          (map #(util/parse-int %))
                                           (into [])))
      
      ; #C is a comment line

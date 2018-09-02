@@ -7,7 +7,7 @@
               [life.ui.app :as app]
               [life.board :as board]
               [life.update-loop :as update-loop]
-              [life.board-manager :as board-manager]))
+              [life.pattern-manager :as pattern-manager]))
 
 (enable-console-print!)
 
@@ -28,7 +28,7 @@
   Is idempotent and should be called on every code reload, since hot reloading won't magically work for it."
  []
  (update-loop/run-loop! !app-db #(board/step! !app-db))
- (board-manager/push-selected-board! !app-db))
+ (pattern-manager/use-selected-pattern! !app-db))
 
 (defn on-js-reload [] (init-app!)) ; reset app state+handlers
 

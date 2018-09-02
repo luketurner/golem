@@ -2,7 +2,7 @@
   (:require [life.update-loop :as update-loop]
             [life.board :as board]
             [life.ui.sidebar :as sidebar]
-            [life.board-manager :as board-manager]))
+            [life.pattern-manager :as pattern-manager]))
 
 (defn component [!db]
  [:div.controls
@@ -10,7 +10,7 @@
   [:div.cmds
    [:button {:on-click #(board/undo! !db)} "undo"]
    [:button {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]
-   [:button {:on-click #(board-manager/push-selected-board! !db)} "reset"]
+   [:button {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]
    [:button {:on-click #(sidebar/toggle! !db)} "load"]]
   [:div.rates-label "Update Rate: "]
   [:div.rates
