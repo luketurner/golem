@@ -83,7 +83,6 @@
  (run!
   (let [unused @!to-watch] ; deref !to-watch even though we don't care about the value
    (when-let [canvas @!canvas]
-    (print "resizing")
     (.addEventListener js/window "resize" #(resize-viewport! !viewport canvas))
     (resize-viewport! !viewport canvas)))))
 
