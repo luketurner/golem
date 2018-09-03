@@ -4,11 +4,12 @@
            [reagent.ratom :refer [cursor run! reaction]]
            [life.math :refer [ceil floor]]
            [life.board :refer [get-current-board update-board!]]
-           [life.canvas :refer [fill-rect! stroke-lines!]]))
+           [life.canvas :refer [fill-rect! stroke-lines! get-event-coords]])) 
 
 (def base-length 10) ; length of a side of a tile, in px
 
-(defonce default-state {:canvas nil
+(defonce default-state {:canvas-tiles nil
+                        :canvas-grid nil
                         :window [100 100]
                         :offset [0 0]
                         :scale 1.0})
@@ -50,7 +51,7 @@
        y (- origin-y (* width tile-y))]
   (fill-rect! ctx x y width width "black")))
 
-(defn redraw-viewport!
+(defn redraw-tiles!
  "Fully redraws the viewport canvas based on the current board state and viewport settings."
  [viewport canvas board]
  (let [{:keys [scale window]} viewport
@@ -60,49 +61,64 @@
        tile-range (calc-tile-range viewport origin)
        board (filter #(tile-in-range? tile-range %) board)]
   (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
-  (draw-grid! ctx tile-range tile-width window origin) ; TODO -- optimize into another canvas element to avoid redraws
   (doseq [tile board] (draw-tile! ctx tile tile-width origin)))) 
+
+(defn redraw-grid!
+ "Fully redraws the viewport canvas based on the current board state and viewport settings."
+ [viewport canvas]
+ (let [{:keys [scale window]} viewport
+       ctx (.getContext canvas "2d")
+       tile-width (* scale base-length)
+       origin (calc-origin viewport)
+       tile-range (calc-tile-range viewport origin)]
+  (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
+  (draw-grid! ctx tile-range tile-width window origin)))
 
 (defn resize-viewport!
  "Mutates viewport and canvas parameters to set width and height to the 'true' (client) width and height.
   Prevents the canvas from being artificially scaled up or down in the browser.
   Note that resizing the canvas has significant performance cost, so this should only be called when needed."
- [!viewport canvas]
- (let [width (.-clientWidth canvas)
-       height (.-clientHeight canvas)]
-  (swap! !viewport assoc :window [width height])
-  (set! (.-width canvas) width)
-  (set! (.-height canvas) height)))
-
+ [!viewport !canvas]
+ (if-let [canvas @!canvas]
+  (swap! !viewport assoc :window [(.-clientWidth canvas) (.-clientHeight canvas)])))
 
 (defn run-resize-viewport!
  "Calls resize-viewport! in a run-loop so that it reactively re-runs if any changes are made to the parameters.
   Note: Because resize events are not triggered by JS DOM redraws, we also want to listen for changes to
   the app UI state. This is kludgy, but a workaround for the lack of element-level resize events."
- [!viewport !canvas !to-watch]
+ [!viewport !canvas-tiles !canvas-grid !to-watch]
+
+ ; TODO -- abstract the below run! loops into a better place?
+ (run!
+  (when-let [canvas-tiles @!canvas-tiles] 
+   (set! (.-width canvas-tiles) @(cursor !viewport [:window 0]))
+   (set! (.-height canvas-tiles) @(cursor !viewport [:window 1]))))
+
+ (run!
+  (when-let [canvas-grid @!canvas-grid]
+   (set! (.-width @!canvas-grid) @(cursor !viewport [:window 0]))
+   (set! (.-height @!canvas-grid) @(cursor !viewport [:window 1]))))
+
+ (.addEventListener js/window "resize" #(resize-viewport! !viewport !canvas-tiles))
  (run!
   (let [unused @!to-watch] ; deref !to-watch even though we don't care about the value
-   (when-let [canvas @!canvas]
-    (.addEventListener js/window "resize" #(resize-viewport! !viewport canvas))
-    (resize-viewport! !viewport canvas)))))
+   (resize-viewport! !viewport !canvas-tiles))))
 
-(defn run-redraw-viewport!
- "Calls redraw-viewport! in a run-loop so that it reactively re-runs if any changes are made to the parameters."
+(defn run-redraw-tiles!
+ "Calls redraw-tiles! in a run-loop so that it reactively re-runs if any changes are made to the parameters."
  [!viewport !canvas !board]
  (run!
   (when-let [canvas @!canvas]
-   (redraw-viewport! @!viewport canvas @!board))))
+   (redraw-tiles! @!viewport canvas @!board))))
 
-
-(defn get-event-coords
- "Given a JS MouseEvent and a Canvas element, calculates the x,y position of the MouseEvent within the
-  Canvas. e.g. if you clicked in the top left corner of the canvas, it would return [0, 0]."
- [event canvas]
- (let [canvas-rect (.getBoundingClientRect canvas)
-       canvas-x (.-left canvas-rect)
-       canvas-y (.-top canvas-rect)]  
-  [(- (.-clientX event) canvas-x)
-   (- (.-clientY event) canvas-y)]))
+(defn run-redraw-grid!
+ "Calls redraw-grid! in a run-loop so that it reactively re-runs if any changes are made to the parameters."
+ [!viewport !canvas]
+ (run!
+  (print "trying to redraw grid")
+  (when-let [canvas @!canvas]
+   (print "redrawing grid")
+   (redraw-grid! @!viewport canvas))))
 
 (defn toggle-tile!
  "Mutates board cursor by inserting tile, or removing it if it already exists."
@@ -141,15 +157,19 @@
  [!app-db]
  (let [!viewport (cursor !app-db [:viewport])
        !board (reaction (get-current-board !app-db))
-       !canvas (cursor !viewport [:canvas])
+       !canvas-tiles (cursor !viewport [:canvas-tiles])
+       !canvas-grid (cursor !viewport [:canvas-grid])
        !ui (cursor !app-db [:ui])]
-  (run-resize-viewport! !viewport !canvas !ui)
-  (run-redraw-viewport! !viewport !canvas !board)
+  (run-resize-viewport! !viewport !canvas-tiles !canvas-grid !ui)
+  (run-redraw-grid! !viewport !canvas-grid)
+  (run-redraw-tiles! !viewport !canvas-tiles !board)
   (r/create-class ; TODO -- no longer needs to be a create-class call? change to type 2?
    {:display-name "viewport"
     :reagent-render
     (fn [app-db]
-     [:canvas#viewport
-      {:ref #(reset! !canvas %)
-       :on-click #(handle-click-event! % !viewport !canvas !app-db)}])})))
+     [:div.viewport-container
+      [:canvas.viewport-grid {:ref #(reset! !canvas-grid %)}]
+      [:canvas.viewport-tiles
+       {:ref #(reset! !canvas-tiles %)
+        :on-click #(handle-click-event! % !viewport !canvas-tiles !app-db)}]])})))
     

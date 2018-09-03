@@ -21,18 +21,26 @@ body {
 .app-footer-container { grid-area: footer; }
 
 /* Header settings */
-header { height: 100%; display: grid; grid: "controls title help" 2fr "controls subtitle help" 1fr / 1fr 1fr 1fr; }
+header { height: 100%; display: grid; grid: "game-ctrl title view-ctrl" 2fr "game-ctrl subtitle view-ctrl" 1fr / 1fr 1fr 1fr; }
 header a { color: inherit; text-decoration: inherit; }
 header > .title { grid-area: title; height: 100%; margin: 0; font-size: 1.5rem; text-align: center; }
 header > .subtitle { grid-area: subtitle; text-align: center; margin: 0; }
-header > .controls-container { grid-area: controls; }
+header > .game-controls-container { grid-area: game-ctrl; }
+header > .viewport-controls-container { grid-area: view-ctrl; }
 
-/* controls */
-.controls { display: grid; grid: "cmds-label cmds" 1fr "rates-label rates" 1fr; }
-.controls .cmds { grid-area: cmds; }
-.controls .cmds-label { grid-area: cmds-label; }
-.controls .rates { grid-area: rates; }
-.controls .rates-label { grid-area: rates-label; }
+/* game-controls */
+.game-controls { display: grid; grid: "cmds-label cmds" 1fr "rates-label rates" 1fr; }
+.game-controls .cmds { grid-area: cmds; }
+.game-controls .cmds-label { grid-area: cmds-label; }
+.game-controls .rates { grid-area: rates; }
+.game-controls .rates-label { grid-area: rates-label; }
+
+/* viewport-controls */
+.viewport-controls { display: grid; grid: "movers-label movers" 1fr "scalers-label scalers" 1fr; }
+.viewport-controls .movers { grid-area: movers; }
+.viewport-controls .movers-label { grid-area: movers-label; }
+.viewport-controls .scalers { grid-area: scalers; }
+.viewport-controls .scalers-label { grid-area: scalers-label; }
 
 /* sidebar */
 .sidebar .saved-board { display: grid; grid: "name coords" 2fr "rle rle" 1fr / 1fr 1fr; cursor: pointer; padding: 0.5rem; border-top: 1px solid rgb(210, 210, 210); }
@@ -42,7 +50,9 @@ header > .controls-container { grid-area: controls; }
 .sidebar .saved-board > .rle { grid-area: rle; font-size: 0.9rem; color: rgb(100, 100, 100); overflow: hidden; text-overflow: ellipsis; }
 
 /* Main settings */
-#viewport { width: 700px; height: 700px; }
+.viewport-container { position: relative; }
+.viewport-tiles { position: absolute; width: 700px; height: 700px; z-index: 2; }
+.viewport-grid { position: absolute; width: 700px; height: 700px; z-index: 1; }
 
 /* Footer settings */
 footer { text-align: center; }

@@ -26,5 +26,7 @@
        !enabled? (cursor !db [:update-loop :enabled])]
   (run!
    (if @!enabled?
-    (set-interval! :update-loop @!interval update-fn)
+    (set-interval! :update-loop @!interval (with-timer :update-loop update-fn))
     (clear-interval! :update-loop)))))
+
+; avg. draw about 6s

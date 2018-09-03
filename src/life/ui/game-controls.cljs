@@ -1,11 +1,11 @@
-(ns life.ui.controls
+(ns life.ui.game-controls
   (:require [life.update-loop :as update-loop]
             [life.board :as board]
             [life.ui.sidebar :as sidebar]
             [life.pattern-manager :as pattern-manager]))
 
 (defn component [!db]
- [:div.controls
+ [:div.game-controls
   [:div.cmds-label "Controls: "]
   [:div.cmds
    [:button {:on-click #(board/undo! !db)} "undo"]
