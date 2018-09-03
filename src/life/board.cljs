@@ -56,6 +56,14 @@
    (or (= count 2) (= count 3))
    (= count 3))))
 
+(defn toggle-tile!
+ "Mutates board cursor by inserting tile, or removing it if it already exists."
+ [!db tile]
+ (update-board! !db
+  (fn [old-board] 
+   (if (contains? old-board tile)
+    (disj old-board tile)
+    (conj old-board tile)))))
 
 (defn step
  "Increments the board one unit of time."

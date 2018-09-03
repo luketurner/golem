@@ -7,6 +7,7 @@
               [life.ui.app :as app]
               [life.board :as board]
               [life.update-loop :as update-loop]
+              [life.ui.viewport :as viewport]
               [life.pattern-manager :as pattern-manager]))
 
 (enable-console-print!)
@@ -38,3 +39,4 @@
 
 (render-app!)
 (init-app!)
+; (viewport/run-watchers! !app-db) ; TODO -- better way to handle this?

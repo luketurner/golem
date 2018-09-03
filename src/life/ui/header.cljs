@@ -1,6 +1,6 @@
 (ns life.ui.header
  (:require [life.ui.game-controls :as game-controls]
-           [life.ui.viewport-controls :as viewport-controls]))
+           [life.ui.viewport.controls :as viewport-controls]))
  
 
 (defn component

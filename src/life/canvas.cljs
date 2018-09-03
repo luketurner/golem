@@ -20,3 +20,10 @@
        canvas-y (.-top canvas-rect)]  
   [(- (.-clientX event) canvas-x)
    (- (.-clientY event) canvas-y)]))
+
+(defn set-dimensions!
+ [canvas [w h]]
+ (let [cw (.-width canvas)
+       ch (.-height canvas)]
+  (when-not (= w cw) (set! (.-width canvas) w))
+  (when-not (= h ch) (set! (.-height canvas) h))))

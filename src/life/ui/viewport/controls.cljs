@@ -1,4 +1,4 @@
-(ns life.ui.viewport-controls
+(ns life.ui.viewport.controls
   (:require [life.ui.viewport :as viewport]
             [reagent.ratom :refer [cursor]]))
 
