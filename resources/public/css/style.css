@@ -14,10 +14,10 @@ body {
 }
 
 .app-container { display: grid; grid: "header" 50px "main" 1fr "footer" 50px; min-height: 100%; }
-.app-container--sidebar { grid: "header header" 50px "sidebar main" 1fr "footer footer" 50px / 1fr 3fr; }
+/* .app-container--sidebar { grid: "header header" 50px "sidebar main" 1fr "footer footer" 50px / 1fr 3fr; } */
 .app-header-container { grid-area: header; }
-.app-sidebar-container { grid-area: sidebar; max-width: 100%; }
-.app-main-container { grid-area: main; padding: 5px 0 5px 0; }
+.app-sidebar-container { position: absolute; left: 0; top: 0; height: 100%; width: 30%; z-index: 10; background-color: rgb(240, 240, 240); }
+.app-main-container { grid-area: main; padding: 5px 0 5px 0; position: relative; }
 .app-footer-container { grid-area: footer; }
 
 /* Header settings */
@@ -29,14 +29,15 @@ header > .game-controls-container { grid-area: game-ctrl; }
 header > .viewport-controls-container { grid-area: view-ctrl; }
 
 /* game-controls */
-.game-controls { display: grid; grid: "cmds-label cmds" 1fr "rates-label rates" 1fr; }
+.game-controls { display: grid; grid: "sidebar cmds-label cmds" 1fr "sidebar rates-label rates" 1fr / 5rem 1fr 2fr; }
 .game-controls .cmds { grid-area: cmds; }
 .game-controls .cmds-label { grid-area: cmds-label; }
 .game-controls .rates { grid-area: rates; }
 .game-controls .rates-label { grid-area: rates-label; }
+.game-controls .sidebar { grid-area: sidebar; margin: auto 0 auto 0; }
 
 /* viewport-controls */
-.viewport-controls { display: grid; grid: "movers-label movers" 1fr "scalers-label scalers" 1fr; }
+.viewport-controls { display: grid; grid: "movers-label movers" 1fr "scalers-label scalers" 1fr / 1fr 2fr; }
 .viewport-controls .movers { grid-area: movers; }
 .viewport-controls .movers-label { grid-area: movers-label; }
 .viewport-controls .scalers { grid-area: scalers; }
@@ -44,7 +45,7 @@ header > .viewport-controls-container { grid-area: view-ctrl; }
 
 /* sidebar */
 .sidebar .saved-board { display: grid; grid: "name coords" 2fr "rle rle" 1fr / 1fr 1fr; cursor: pointer; padding: 0.5rem; border-top: 1px solid rgb(210, 210, 210); }
-.sidebar .saved-board:hover { background-color: rgba(0, 0, 0, 0.05); }
+.sidebar .saved-board.selected, .saved-board:hover { background-color: rgba(0, 0, 0, 0.05); }
 .sidebar .saved-board > .name { grid-area: name; font-size: 1.1rem; overflow: hidden; text-overflow: ellipsis; }
 .sidebar .saved-board > .coords { grid-area: coords; font-size: 0.9rem; color: rgb(100, 100, 100); overflow: hidden; }
 .sidebar .saved-board > .rle { grid-area: rle; font-size: 0.9rem; color: rgb(100, 100, 100); overflow: hidden; text-overflow: ellipsis; }

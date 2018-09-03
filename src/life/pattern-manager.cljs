@@ -29,3 +29,10 @@
  "Uses the currently-selected pattern, displaying it on the screen."
  [!db]
  (pattern/use-pattern! !db (selected-pattern !db)))
+
+
+(defn select-and-use-pattern!
+ "Mutates the currently-selected pattern and calls use-pattern! on it."
+ [!db pattern]
+ (swap! !db assoc-in [:pattern-manager :selected] pattern)
+ (use-selected-pattern! !db))

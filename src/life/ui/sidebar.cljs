@@ -16,7 +16,8 @@
  (let [patterns (pattern-manager/saved-patterns !db)]
   (into [:div.sidebar [:h1 "Pattern Library"]]
    (for [{:keys [name board] {[dim-x dim-y] :dimensions pattern-str :pattern} :rle :as pattern} patterns]
-    [:div.saved-board {:on-click #(pattern/use-pattern! !db pattern)}
+    [:div.saved-board {:class (when (= pattern (pattern-manager/selected-pattern !db)) "selected")
+                       :on-click #(pattern-manager/select-and-use-pattern! !db pattern)}
      [:div.name name]
      [:div.coords (str "x: " dim-x ", y: " dim-y)]
      [:div.rle pattern-str]]))))

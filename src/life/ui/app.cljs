@@ -11,9 +11,9 @@
 (defn component [!db]
  (let [db @!db
        sidebar? (sidebar/is-open? !db)]
-  [:div {:class (if sidebar? "app-container app-container--sidebar" "app-container")}
+  [:div.app-container ; {:class (if sidebar? "app-container app-container--sidebar" "app-container")}
    [:div.app-header-container [header/component !db]]
-   (when sidebar? [:div.app-sidebar-container [sidebar/component !db]])
-   ; [controls/component !app-db]
-   [:div.app-main-container [viewport/component !db]]
+   [:div.app-main-container
+    (when sidebar? [:div.app-sidebar-container [sidebar/component !db]])
+    [viewport/component !db]]
    [:div.app-footer-container [footer !db]]]))

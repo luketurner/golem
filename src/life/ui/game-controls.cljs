@@ -6,12 +6,12 @@
 
 (defn component [!db]
  [:div.game-controls
+  [:div.sidebar [:button {:on-click #(sidebar/toggle! !db)} "patterns"]] 
   [:div.cmds-label "Controls: "]
   [:div.cmds
    [:button {:on-click #(board/undo! !db)} "undo"]
    [:button {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]
-   [:button {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]
-   [:button {:on-click #(sidebar/toggle! !db)} "load"]]
+   [:button {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]]
   [:div.rates-label "Update Rate: "]
   [:div.rates
    [:button {:on-click #(update-loop/inc-rate! !db 1000)} "--"]
