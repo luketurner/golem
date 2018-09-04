@@ -6,6 +6,7 @@
 
 (defn stroke-lines! [ctx coord-pairs style]
  (set! (.-strokeStyle ctx) style)
+ (.beginPath ctx)
  (doseq [[[x0 y0] [x1 y1]] coord-pairs]
   (.moveTo ctx x0 y0)
   (.lineTo ctx x1 y1))
