@@ -5,15 +5,10 @@
 ; A "pattern" is a reusable "board" with added metadata.
 ; Roughly based on the concept of RLE patterns, but not tied to RLE structure.
 
-(defn rle->pattern
- [rle-str]
- (let [{:keys [name dimensions board offset origin] :as rle} (rle/parse-rle rle-str)]
-  {:name (or name "Unnamed Pattern")
-   :dimensions dimensions
-   :board board
-   :offset offset
-   :origin origin
-   :rle rle}))
+(defn rle->pattern [rle-str] (rle/parse-rle rle-str))
+
+(defn pattern->rle [pattern] (rle/gen-rle pattern)) 
+      
 
 (defn use-pattern!
  [!db {:keys [board]}]

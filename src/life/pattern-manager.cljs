@@ -25,14 +25,29 @@
 (defn saved-patterns [!db] @(cursor !db [:pattern-manager :saved]))
 (defn selected-pattern [!db] @(cursor !db [:pattern-manager :selected]))
 
+(defn import-pattern!
+ "Imports `pattern` into the pattern manager in `!db`."
+ [!db pattern]
+ (swap! !db update-in [:pattern-manager :saved] #(conj % pattern)))
+
+(defn select-pattern!
+ "Chooses `pattern` as the active selection in the pattern manager in `!db`."
+ [!db pattern]
+ (swap! !db assoc-in [:pattern-manager :selected] pattern))
+
 (defn use-selected-pattern!
  "Uses the currently-selected pattern, displaying it on the screen."
  [!db]
  (pattern/use-pattern! !db (selected-pattern !db)))
 
-
 (defn select-and-use-pattern!
- "Mutates the currently-selected pattern and calls use-pattern! on it."
+ "Chooses `pattern` as the active selection in the pattern manager in `!db` and displays it on the screen."
  [!db pattern]
- (swap! !db assoc-in [:pattern-manager :selected] pattern)
+ (select-pattern! !db pattern)
  (use-selected-pattern! !db))
+
+(defn import-select-and-use-pattern!
+ "Imports `pattern`, selects it, and displays it on the screen."
+ [!db pattern]
+ (import-pattern! !db pattern)
+ (select-and-use-pattern! !db pattern)) 
