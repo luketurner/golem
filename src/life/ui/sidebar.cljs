@@ -27,12 +27,14 @@
 (defn component
   [!db]
   (let [patterns (pattern-manager/saved-patterns !db)
+        selected-pattern-id (pattern-manager/selected-pattern-id !db)
         selected-pattern (pattern-manager/selected-pattern !db)]
     (vec
       (concat [:div.sidebar [:h1.sidebar-header "Pattern Library"]]
-              [(into [:div.sidebar-body (for [{:keys [name board] [dim-x dim-y] :dimensions pattern-str :pattern :as pattern} patterns]
-                                          [:div.saved-board {:class (when (= pattern selected-pattern) "selected")
-                                                             :on-click #(pattern-manager/select-and-use-pattern! !db pattern)}
+              [(into [:div.sidebar-body (for [[id {:keys [name board] [dim-x dim-y] :dimensions pattern-str :pattern :as pattern}] patterns]
+                                          [:div.saved-board {:class (when (= id selected-pattern-id) "selected")
+                                                             :on-click #(pattern-manager/select-and-use-pattern! !db id)
+                                                             :key id}
                                             [:div.name name]
                                             [:div.coords (str "x: " dim-x ", y: " dim-y)]
                                             [:div.rle pattern-str]])])]
