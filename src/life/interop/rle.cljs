@@ -1,6 +1,7 @@
 (ns life.interop.rle
  (:require [clojure.string :as string]
-           [life.util :as util]))
+           [life.util :as util]
+           [com.rpl.specter :as s]))
  
 ; handles encoding/decoding RLE (run-length-encoded) Life patterns.
 ; See: http://www.conwaylife.com/w/index.php?title=Run_Length_Encoded
@@ -17,10 +18,12 @@
 ; the b at the end of line, and the $ eol, are optional.
 ; the last character in the pattern should be !
 
-(def tags {"o" :alive
-           "b" :dead
-           "$" :eol
-           "!" :eop})
+(def str->tag {"o" :alive
+               "b" :dead
+               "$" :eol
+               "!" :eop})
+
+(def tag->str (s/transform [s/ALL] reverse str->tag))
 
 (defn parse-rle-pattern
  "Parses an RLE pattern into its \"AST\": a seq of HashMaps, one per token.
@@ -29,7 +32,7 @@
  [rle-pattern]
  (->> rle-pattern
   (re-seq #"\s*(?:(\d*)([bo$!]))")
-  (map (fn [[m c t]] {:tag (tags t) :count (util/parse-int c 1)}))))
+  (map (fn [[m c t]] {:tag (str->tag t) :count (util/parse-int c 1)}))))
 
 (defn parse-rle-head
  [rle-head]
@@ -102,3 +105,85 @@
    (let [pattern-ast (parse-rle-pattern (:pattern data))
          board (pattern-ast->board pattern-ast)]
     (into data {:pattern-ast pattern-ast :board board})))))
+
+
+(defn zip-pairs
+ [coll]
+ (map vector coll (concat (drop 1 coll) [nil])))
+
+
+(defn- compact-tag-list
+ [tags]
+ (->> tags
+  (partition-by :tag)
+  (map (fn [vs] (reduce (fn [acc {c :count}] (update acc :count #(+ % c))) vs)))))
+ 
+
+(defn- x-coords->tags
+ [xs]
+ (let [tags-reducer (fn [tags [old-x next-x]]
+                     (let [between-tiles (- next-x 1 (or old-x 0))]
+                      (concat tags
+                              (when (<= 0 old-x) [{:tag :alive :count 1}])
+                              (when (< 0 between-tiles) [{:tag :dead :count between-tiles}]))))]
+  (->> xs
+   (cons -1)
+   (zip-pairs)  
+   (reduce tags-reducer [])
+   (compact-tag-list))))
+
+
+(defn board->pattern-ast
+ [board]
+
+ ; todo -- make this more efficient?
+ (->> board                                     ; #{[1 1] [1 3] [1 2] [0 1] [5 1] [1 5]}
+  (group-by second)                             ; {1 ([1 1] [0 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
+  (into {0 '()})                                ; {0 (), 1 ([1 1] [0 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
+  (s/transform [s/MAP-VALS] #(sort-by first %)) ; {0 (), 1 ([0 1] [1 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
+  (s/transform [s/MAP-VALS s/ALL] first)        ; (0 (), 1 (0 1 5), 3 (1), 2 (1), 5 (1))
+  (sort-by first)                               ; (0 (), 1 (0 1 5), 2 (1), 3 (1), 5 (1))
+  (zip-pairs)
+  (reduce
+   (fn [ast [this-line next-line]]
+    (let [[y-coord x-coords] this-line
+          [next-y-coord _] (or next-line [inc y-coord])
+          num-eols (if next-line (- (first next-line) y-coord) 1)]
+     (concat ast
+      (x-coords->tags x-coords)
+      (when (pos? num-eols) [{ :tag :eol :count num-eols}]))))
+   [])
+  (vec)
+  (#(conj % {:tag :eop :count :1})))) 
+   
+
+
+(defn pattern-ast->str
+ "Gconvers an RLE pattern AST (array of tags) into a string"
+ [pattern-ast]
+ (apply str (for [{:keys [count tag]} pattern-ast] (str (when-not (= count 1) count) (tag->str tag)))))
+
+
+(defn gen-#N [{:keys [name]}] (str "#N " name "\n"))
+(defn gen-#O [{:keys [origin]}] (str "#O " origin "\n"))
+(defn gen-#P [{:keys [offset]}] (when (seq offset) (str "#P " (string/join offset " ") "\n")))
+(defn gen-#C [{:keys [comments]}] (reduce #(str %1 "#C " %2 "\n") "" comments))
+(defn gen-xy [{[x y] :dimensions}] (str "x = " x ", y = " y "\n"))
+(defn gen-pattern
+ [{:keys [pattern pattern-ast board]}]
+ (cond
+   pattern pattern
+   pattern-ast (pattern-ast->str pattern-ast)
+   board (-> board (board->pattern-ast) (pattern-ast->str)))) 
+
+(defn gen-rle
+ "Generates an RLE string based on the RLE AST object passed in."
+ [rle-ast]
+ (str
+  (gen-#N rle-ast)
+  (gen-#O rle-ast)
+  (gen-#C rle-ast)
+  (gen-#P rle-ast)
+  (gen-xy rle-ast)
+  (gen-pattern rle-ast)))
+
