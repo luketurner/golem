@@ -9,7 +9,7 @@
 (def default-state
   {:board           board-state
    :pattern-manager pattern-manager-state
-   :update-loop     {:interval 500
+   :update-loop     {:interval 100
                      :enabled  true}
    :handlers        {:interval {}}
    :viewport        viewport-state

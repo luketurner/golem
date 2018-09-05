@@ -14,8 +14,8 @@
       [:button {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]]
     [:div.rates-label "Update Rate: "]
     [:div.rates
-      [:button {:on-click #(update-loop/inc-rate! !db 1000)} "--"]
-      [:button {:on-click #(update-loop/inc-rate! !db 100)} "-"]
+      [:button {:on-click #(update-loop/inc-rate! !db 100)} "--"]
+      [:button {:on-click #(update-loop/inc-rate! !db 10)} "-"]
       [:span (str (update-loop/get-rate !db) " ms")]
-      [:button {:on-click #(update-loop/inc-rate! !db -100)} "+"]
-      [:button {:on-click #(update-loop/inc-rate! !db -1000)} "++"]]])
+      [:button {:on-click #(update-loop/inc-rate! !db -10)} "+"]
+      [:button {:on-click #(update-loop/inc-rate! !db -100)} "++"]]])
