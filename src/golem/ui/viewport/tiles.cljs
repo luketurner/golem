@@ -1,16 +1,15 @@
 (ns golem.ui.viewport.tiles
   (:require [reagent.ratom :refer [cursor run! reaction]]
-            [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range?]]
+            [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range? tile->px]]
             [golem.ui.viewport.input :refer [handle-click-event!]]
             [golem.canvas :refer [fill-rect! set-dimensions!]]
             [golem.board :refer [get-current-board]]))
 
 (defn- draw-tile!
-  "Draws a single tile onto the canvas."
-  [ctx [tile-x tile-y] width [origin-x origin-y]]
-  (let [x (+ origin-x (* width tile-x))
-        y (- origin-y (* width tile-y))]
-    (fill-rect! ctx x y width width "black")))
+  "Draws a single tile onto the canvas. Starts at the lower-left hand corner, and draws up and to the right."
+  [ctx viewport tile width]
+  (let [[x y] (tile->px viewport tile)]
+    (fill-rect! ctx x y width (- width) "black")))
 
 (defn redraw-tiles!
   "Redraws all of the tiles based on the current board state and viewport settings."
@@ -22,7 +21,7 @@
         tile-range (calc-tile-range viewport origin)
         board (filter #(tile-in-range? tile-range %) board)]
     (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
-    (doseq [tile board] (draw-tile! ctx tile tile-width origin))))
+    (doseq [tile board] (draw-tile! ctx viewport tile tile-width))))
 
 (defn run-redraw-tiles!
   [!viewport !canvas !board]
