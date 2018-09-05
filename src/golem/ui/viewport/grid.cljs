@@ -3,6 +3,13 @@
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
             [golem.canvas :as canvas]))
 
+
+(defn draw-axes!
+  [ctx [win-x win-y] [origin-x origin-y]]
+  (canvas/stroke-lines! ctx [[[origin-x 0] [origin-x win-y]]
+                             [[0 origin-y] [win-x origin-y]]]
+                        "darkblue"))
+
 (defn- draw-grid!
   "Draws the background grid onto the canvas."
   [ctx tile-range tile-width [win-x win-y] [origin-x origin-y]]
@@ -13,7 +20,8 @@
         row-lines (->> (range y0 (inc y1))
                        (map #(+ (* tile-width %) origin-y))
                        (map #(vector [0 %] [win-x %])))]
-    (canvas/stroke-lines! ctx (into row-lines column-lines) "rgb(210, 210, 210)")))
+    (canvas/stroke-lines! ctx (into row-lines column-lines) "rgb(210, 210, 210)")
+    (draw-axes! ctx [win-x win-y] [origin-x origin-y])))
 
 (defn redraw-grid!
   "Fully redraws grid onto `canvas` based on `viewport`."
