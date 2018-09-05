@@ -6,7 +6,7 @@
 
 (defn component [!db]
   [:div.game-controls
-    [:div.sidebar [:button {:on-click #(sidebar/toggle! !db)} "patterns"]]
+    [:div.sidebar [:button {:on-click #(sidebar/toggle! !db)} (if (sidebar/is-open? !db) "hide" "show") " patterns"]]
     [:div.cmds-label "Controls: "]
     [:div.cmds
       [:button {:on-click #(board/undo! !db)} "undo"]
