@@ -1,6 +1,7 @@
 (ns life.board
   (:require [life.tile :as tile]
-            [reagent.ratom :refer [cursor reaction]]))
+            [reagent.ratom :refer [cursor reaction]]
+            [com.rpl.specter :as s]))
 
 ; A board is a HashSet of tiles, e.g. #{[1 2] [4 -1]}
 ; All of the tiles in the board are considered "alive." (All other tiles are assumed dead.)
@@ -11,21 +12,39 @@
 ; the 2nd element is the previous state, and so forth.
 (def default-state {:history     '()
                     :min-history 75
-                    :max-history 100})
+                    :max-history 100
+                    :boundary [[-1000000 -1000000] [1000000 1000000]]})
 
+
+(defn- enforce-boundary
+  [boundary board]
+  (let [[[x0 y0] [x1 y1]] boundary]
+    (->> board
+         (filter (fn [[x y]] (and (<= x0 x x1) (<= y0 y y1))))
+         (into #{}))))
+
+
+(defn- drop-overflow
+  [coll min-size max-size]
+  (if (< max-size (count coll)) (take min-size coll) coll))
 
 (defn update-board!
-  "Generates a new board by caling update-fn on the current board, then pushes the result onto
+  "Generates a new board by calling update-fn on the current board, then pushes the result onto
    the board history. Automatically handles cleaning too-large histories.
+
+   Note that this enforces a boundary on the board. Once tiles reach the boundary, patterns will decohere.
+   However, this boundary can be quite large.
+
    TODO - should cleaning too-large histories be done with a separate do! operation?"
   [!db update-fn]
   (let [min-history @(cursor !db [:board :min-history])
-        max-history @(cursor !db [:board :max-history])]
+        max-history @(cursor !db [:board :max-history])
+        boundary @(cursor !db [:board :boundary])]
     (swap! !db update-in [:board :history]
            (fn [history]
-             (let [history-too-large? (<= max-history (count history))
-                   history (if history-too-large? (take min-history history) history)]
-               (conj history (update-fn (first history))))))))
+             (-> history
+                 (conj (->> history (first) (update-fn) (enforce-boundary boundary)))
+                 (drop-overflow min-history max-history))))))
 
 (defn push-board!
   "Pushes a new board to the front of the board history."
