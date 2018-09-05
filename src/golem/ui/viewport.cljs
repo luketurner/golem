@@ -9,11 +9,12 @@
             [golem.ui.sidebar :as sidebar]
             [golem.ui.viewport.tiles :as tiles]))
 
-(defonce default-state {:canvas-tiles nil
-                        :canvas-grid  nil
-                        :window       [100 100]
-                        :offset       [0 0]
-                        :scale        1.0})
+(def default-state {:canvas-tiles nil
+                    :canvas-grid  nil
+                    :window       [100 100] ; width of the window (in px)
+                    :offset       [0 0]     ; Distance between the board origin and the center of the screen (in px)
+                    :scale        1.0})     ; factor to scale when converting from tiles->px
+
 
 (defn resize-viewport!
   "Mutates :window to match the actual rendered width/height in the client browsers.
