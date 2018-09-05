@@ -1,6 +1,6 @@
-(ns life.interop.rle
+(ns golem.interop.rle
   (:require [clojure.string :as string]
-            [life.util :as util]
+            [golem.util :as util]
             [com.rpl.specter :as s]))
 
 ; handles encoding/decoding RLE (run-length-encoded) Life patterns.

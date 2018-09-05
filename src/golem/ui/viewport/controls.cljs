@@ -1,6 +1,6 @@
-(ns life.ui.viewport.controls
+(ns golem.ui.viewport.controls
   (:require [reagent.ratom :refer [cursor]]
-            [life.ui.viewport.math :refer [base-length]]
+            [golem.ui.viewport.math :refer [base-length]]
             [com.rpl.specter :as s]))
 
 (defn shift-offset!

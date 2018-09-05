@@ -1,6 +1,6 @@
-(ns life.pattern
-  (:require [life.interop.rle :as rle]
-            [life.board :as board]))
+(ns golem.pattern
+  (:require [golem.interop.rle :as rle]
+            [golem.board :as board]))
 
 ; A "pattern" is a reusable "board" with added metadata.
 ; Roughly based on the concept of RLE patterns, but not tied to RLE structure.

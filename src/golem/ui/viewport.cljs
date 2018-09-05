@@ -1,13 +1,13 @@
-(ns life.ui.viewport
+(ns golem.ui.viewport
   (:require [com.rpl.specter :as s]
             [reagent.core :as r]
             [reagent.ratom :refer [cursor run! reaction]]
-            [life.math :refer [ceil floor]]
-            [life.board :refer [get-current-board update-board!]]
-            [life.canvas :refer [fill-rect! stroke-lines! get-event-coords]]
-            [life.ui.viewport.grid :as grid]
-            [life.ui.sidebar :as sidebar]
-            [life.ui.viewport.tiles :as tiles]))
+            [golem.math :refer [ceil floor]]
+            [golem.board :refer [get-current-board update-board!]]
+            [golem.canvas :refer [fill-rect! stroke-lines! get-event-coords]]
+            [golem.ui.viewport.grid :as grid]
+            [golem.ui.sidebar :as sidebar]
+            [golem.ui.viewport.tiles :as tiles]))
 
 (defonce default-state {:canvas-tiles nil
                         :canvas-grid  nil

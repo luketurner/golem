@@ -1,4 +1,4 @@
-(ns life.util)
+(ns golem.util)
 
 
 (defn parse-int

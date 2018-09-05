@@ -1,7 +1,7 @@
-(ns life.ui.viewport.grid
+(ns golem.ui.viewport.grid
   (:require [reagent.ratom :refer [cursor run!]]
-            [life.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
-            [life.canvas :as canvas]))
+            [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
+            [golem.canvas :as canvas]))
 
 (defn- draw-grid!
   "Draws the background grid onto the canvas."

@@ -1,9 +1,9 @@
-(ns life.ui.viewport.tiles
+(ns golem.ui.viewport.tiles
   (:require [reagent.ratom :refer [cursor run! reaction]]
-            [life.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range?]]
-            [life.ui.viewport.input :refer [handle-click-event!]]
-            [life.canvas :refer [fill-rect! set-dimensions!]]
-            [life.board :refer [get-current-board]]))
+            [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range?]]
+            [golem.ui.viewport.input :refer [handle-click-event!]]
+            [golem.canvas :refer [fill-rect! set-dimensions!]]
+            [golem.board :refer [get-current-board]]))
 
 (defn- draw-tile!
   "Draws a single tile onto the canvas."

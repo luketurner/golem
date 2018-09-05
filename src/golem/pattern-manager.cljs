@@ -1,6 +1,6 @@
-(ns life.pattern-manager
+(ns golem.pattern-manager
   (:require [reagent.ratom :refer [cursor]]
-            [life.pattern :as pattern]))
+            [golem.pattern :as pattern]))
 
 ; Module for maintaining a list of saved patterns that can be loaded later.
 ; Used for three things:

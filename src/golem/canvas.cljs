@@ -1,4 +1,4 @@
-(ns life.canvas)
+(ns golem.canvas)
 
 (defn fill-rect! [ctx x y width height style]
   (set! (.-fillStyle ctx) style)

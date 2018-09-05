@@ -1,8 +1,8 @@
-(ns life.ui.viewport.input
-  (:require [life.ui.viewport.math :refer [base-length calc-origin]]
-            [life.math :refer [floor ceil]]
-            [life.board :refer [toggle-tile!]]
-            [life.canvas :refer [get-event-coords]]))
+(ns golem.ui.viewport.input
+  (:require [golem.ui.viewport.math :refer [base-length calc-origin]]
+            [golem.math :refer [floor ceil]]
+            [golem.board :refer [toggle-tile!]]
+            [golem.canvas :refer [get-event-coords]]))
 
 (defn handle-click-event!
   "Contains logic for handling click events anywhere on the viewport canvas.

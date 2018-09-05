@@ -1,4 +1,4 @@
-(ns life.tile)
+(ns golem.tile)
 
 ; A tile is an [x,y] pair representing a coordinate on the board
 

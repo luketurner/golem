@@ -1,14 +1,14 @@
-(ns life.core
+(ns golem.core
   (:require [reagent.core :as reagent]
             [reagent.ratom :refer [run! cursor]]
             [com.rpl.specter :as s]
             [re-frisk.core :as frisk]
-            [life.db :refer [!app-db]]
-            [life.ui.app :as app]
-            [life.board :as board]
-            [life.update-loop :as update-loop]
-            [life.ui.viewport :as viewport]
-            [life.pattern-manager :as pattern-manager]))
+            [golem.db :refer [!app-db]]
+            [golem.ui.app :as app]
+            [golem.board :as board]
+            [golem.update-loop :as update-loop]
+            [golem.ui.viewport :as viewport]
+            [golem.pattern-manager :as pattern-manager]))
 
 (enable-console-print!)
 

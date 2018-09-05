@@ -1,4 +1,4 @@
-(defproject life "0.1.0-SNAPSHOT"
+(defproject golem "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -27,16 +27,16 @@
                 ;; The presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel     {:on-jsload "life.core/on-js-reload"
+                :figwheel     {:on-jsload "golem.core/on-js-reload"
                                ;; :open-urls will pop open your application
                                ;; in the default browser once Figwheel has
                                ;; started and compiled your application.
                                ;; Comment this out once it no longer serves you.
                                :open-urls ["http://localhost:3449/index.html"]}
 
-                :compiler     {:main                 life.core
+                :compiler     {:main                 golem.core
                                :asset-path           "js/compiled/out"
-                               :output-to            "resources/public/js/compiled/life.js"
+                               :output-to            "resources/public/js/compiled/golem.js"
                                :output-dir           "resources/public/js/compiled/out"
                                :source-map-timestamp true
                                ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
@@ -48,9 +48,9 @@
                ;; lein cljsbuild once min
                {:id           "min"
                 :source-paths ["src"]
-                :compiler     {:output-to       "resources/public/js/compiled/life.js"
+                :compiler     {:output-to       "resources/public/js/compiled/golem.js"
                                :closure-defines {goog.DEBUG false}
-                               :main            life.core
+                               :main            golem.core
                                :optimizations   :advanced
                                :pretty-print    false}}]}
 

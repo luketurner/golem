@@ -1,5 +1,5 @@
-(ns life.handlers
-  (:require [life.db :refer [!app-db]]))
+(ns golem.handlers
+  (:require [golem.db :refer [!app-db]]))
 
 (defn clear-interval! [key]
   (swap! !app-db update-in [:handlers :interval key] #(when (number? %) (js/clearInterval %) nil)))

@@ -1,8 +1,8 @@
-(ns life.ui.game-controls
-  (:require [life.update-loop :as update-loop]
-            [life.board :as board]
-            [life.ui.sidebar :as sidebar]
-            [life.pattern-manager :as pattern-manager]))
+(ns golem.ui.game-controls
+  (:require [golem.update-loop :as update-loop]
+            [golem.board :as board]
+            [golem.ui.sidebar :as sidebar]
+            [golem.pattern-manager :as pattern-manager]))
 
 (defn component [!db]
   [:div.game-controls

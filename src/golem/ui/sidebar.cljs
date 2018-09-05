@@ -1,8 +1,8 @@
-(ns life.ui.sidebar
+(ns golem.ui.sidebar
   (:require [reagent.ratom :refer [cursor]]
-            [life.interop.rle :as rle]
-            [life.pattern-manager :as pattern-manager]
-            [life.pattern :as pattern]))
+            [golem.interop.rle :as rle]
+            [golem.pattern-manager :as pattern-manager]
+            [golem.pattern :as pattern]))
 
 
 (defn is-open?

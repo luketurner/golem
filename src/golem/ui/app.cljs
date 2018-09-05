@@ -1,7 +1,7 @@
-(ns life.ui.app
-  (:require [life.ui.viewport :as viewport]
-            [life.ui.header :as header]
-            [life.ui.sidebar :as sidebar]))
+(ns golem.ui.app
+  (:require [golem.ui.viewport :as viewport]
+            [golem.ui.header :as header]
+            [golem.ui.sidebar :as sidebar]))
 
 (defn footer
   [!db]

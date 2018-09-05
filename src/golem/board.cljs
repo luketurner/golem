@@ -1,5 +1,5 @@
-(ns life.board
-  (:require [life.tile :as tile]
+(ns golem.board
+  (:require [golem.tile :as tile]
             [reagent.ratom :refer [cursor reaction]]
             [com.rpl.specter :as s]))
 

@@ -1,6 +1,6 @@
-(ns life.update-loop
+(ns golem.update-loop
   (:require [reagent.ratom :refer [run! cursor]]
-            [life.handlers :refer [set-interval! clear-interval!]]))
+            [golem.handlers :refer [set-interval! clear-interval!]]))
 
 
 (defn is-enabled? [!db] @(cursor !db [:update-loop :enabled]))

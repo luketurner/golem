@@ -1,8 +1,8 @@
-(ns life.db
+(ns golem.db
   (:require [reagent.core :as reagent :refer [atom]]
-            [life.board :refer [default-state] :rename {default-state board-state}]
-            [life.ui.viewport :refer [default-state] :rename {default-state viewport-state}]
-            [life.pattern-manager :refer [default-state] :rename {default-state pattern-manager-state}]))
+            [golem.board :refer [default-state] :rename {default-state board-state}]
+            [golem.ui.viewport :refer [default-state] :rename {default-state viewport-state}]
+            [golem.pattern-manager :refer [default-state] :rename {default-state pattern-manager-state}]))
 
 ; default (or initial) state for the app db.
 ; note: uses def instead of defonce so updates to default-state are live-reloaded.
