@@ -6,7 +6,8 @@
 (defn footer
   [!db]
   [:footer
-   [:span "Copyright 2018 Luke Turner"]])
+   [:div "Copyright 2018 Luke Turner"]
+   [:div [:a {:href "https://github.com/luketurner/golem"} "Github"]]])
 
 (defn component [!db]
   (let [db @!db
