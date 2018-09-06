@@ -8,7 +8,7 @@ Conway's Game of Life in the browser, written as an experiment in ClojureScript.
 
 - Increase/decrease the rate of time.
 - Click on the board to swap cells between alive and dead.
-- RLE-encoded pattern import/export.
+- Library of interesting patterns, with RLE import/export.
 
 ## Usage
 
