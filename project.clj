@@ -1,8 +1,8 @@
 (defproject golem "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url  "http://www.eclipse.org/legal/epl-v10.html"}
+  :description "A Conway's Game of Life Emulator"
+  :url "https://github.com/luketurner/golem"
+  :license {:name "MIT License"
+            :url  "https://spdx.org/licenses/MIT.html"}
 
 
 
