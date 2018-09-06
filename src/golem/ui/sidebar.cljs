@@ -1,7 +1,7 @@
 (ns golem.ui.sidebar
   (:require [reagent.ratom :refer [cursor]]
             [golem.interop.rle :as rle]
-            [golem.pattern-manager :as pattern-manager]
+            [golem.pattern_manager :as pattern-manager]
             [golem.pattern :as pattern]))
 
 

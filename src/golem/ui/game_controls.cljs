@@ -1,8 +1,8 @@
-(ns golem.ui.game-controls
-  (:require [golem.update-loop :as update-loop]
+(ns golem.ui.game_controls
+  (:require [golem.update_loop :as update-loop]
             [golem.board :as board]
             [golem.ui.sidebar :as sidebar]
-            [golem.pattern-manager :as pattern-manager]))
+            [golem.pattern_manager :as pattern-manager]))
 
 (defn component [!db]
   [:div.game-controls

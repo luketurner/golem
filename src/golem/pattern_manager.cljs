@@ -1,4 +1,4 @@
-(ns golem.pattern-manager
+(ns golem.pattern_manager
   (:require [reagent.ratom :refer [cursor]]
             [golem.pattern :as pattern]
             [cljs.spec.alpha :as s]))

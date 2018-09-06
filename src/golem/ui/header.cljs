@@ -1,5 +1,5 @@
 (ns golem.ui.header
-  (:require [golem.ui.game-controls :as game-controls]
+  (:require [golem.ui.game_controls :as game-controls]
             [golem.ui.viewport.controls :as viewport-controls]))
 
 

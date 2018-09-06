@@ -1,4 +1,4 @@
-(ns golem.update-loop
+(ns golem.update_loop
   (:require [reagent.ratom :refer [run! cursor]]
             [golem.handlers :refer [set-interval! clear-interval!]]))
 

@@ -2,7 +2,7 @@
   (:require [reagent.core :as reagent :refer [atom]]
             [golem.board :refer [default-state] :rename {default-state board-state}]
             [golem.ui.viewport :refer [default-state] :rename {default-state viewport-state}]
-            [golem.pattern-manager :refer [default-state] :rename {default-state pattern-manager-state}]
+            [golem.pattern_manager :refer [default-state] :rename {default-state pattern-manager-state}]
             [cljs.spec.alpha :as s]
             [expound.alpha :refer [expound]]))
 

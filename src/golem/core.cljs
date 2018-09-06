@@ -6,9 +6,9 @@
             [golem.db :refer [!app-db]]
             [golem.ui.app :as app]
             [golem.board :as board]
-            [golem.update-loop :as update-loop]
+            [golem.update_loop :as update-loop]
             [golem.ui.viewport :as viewport]
-            [golem.pattern-manager :as pattern-manager]))
+            [golem.pattern_manager :as pattern-manager]))
 
 (enable-console-print!)
 
