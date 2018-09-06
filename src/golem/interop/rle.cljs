@@ -1,7 +1,8 @@
 (ns golem.interop.rle
   (:require [clojure.string :as string]
             [golem.util :as util]
-            [com.rpl.specter :as s]))
+            [com.rpl.specter :refer [transform ALL MAP-VALS]]
+            [cljs.spec.alpha :as s]))
 
 ; handles encoding/decoding RLE (run-length-encoded) Life patterns.
 ; See: http://www.conwaylife.com/w/index.php?title=Run_Length_Encoded
@@ -18,12 +19,18 @@
 ; the b at the end of line, and the $ eol, are optional.
 ; the last character in the pattern should be !
 
+(s/def ::pattern string?) ; TODO -- could do better verification here
+(s/def ::tag keyword?) ; and here
+(s/def ::count int?)
+(s/def ::tag-entry (s/keys :req-un [::tag ::count]))
+(s/def ::pattern-ast (s/coll-of ::tag-entry))
+
 (def str->tag {"o" :alive
                "b" :dead
                "$" :eol
                "!" :eop})
 
-(def tag->str (s/transform [s/ALL] reverse str->tag))
+(def tag->str (transform [ALL] reverse str->tag))
 
 (defn parse-rle-pattern
   "Parses an RLE pattern into its \"AST\": a seq of HashMaps, one per token.
@@ -140,8 +147,8 @@
   (->> board                                                ; #{[1 1] [1 3] [1 2] [0 1] [5 1] [1 5]}
        (group-by second)                                    ; {1 ([1 1] [0 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
        (into {0 '()})                                       ; {0 (), 1 ([1 1] [0 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
-       (s/transform [s/MAP-VALS] #(sort-by first %))        ; {0 (), 1 ([0 1] [1 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
-       (s/transform [s/MAP-VALS s/ALL] first)               ; (0 (), 1 (0 1 5), 3 (1), 2 (1), 5 (1))
+       (transform [MAP-VALS] #(sort-by first %))        ; {0 (), 1 ([0 1] [1 1] [5 1]), 3 ([1 3]), 2 ([1 2]), 5 ([1 5])}
+       (transform [MAP-VALS ALL] first)               ; (0 (), 1 (0 1 5), 3 (1), 2 (1), 5 (1))
        (sort-by first)                                      ; (0 (), 1 (0 1 5), 2 (1), 3 (1), 5 (1))
        (zip-pairs)
        (reduce

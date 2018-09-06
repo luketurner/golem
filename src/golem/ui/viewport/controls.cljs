@@ -5,7 +5,7 @@
 
 (defn shift-offset!
   [!db offset]
-  (swap! !db update-in [:viewport :offset] #(map + % (map (partial * base-length) offset)))) ; todo -abstract this better
+  (swap! !db update-in [:viewport :offset] #(vec (map + % (map (partial * base-length) offset))))) ; todo -abstract this better
 (defn rescale! [!db mult] (swap! (cursor !db [:viewport :scale]) * mult))
 
 (defn component [!db]

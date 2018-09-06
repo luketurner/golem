@@ -39,4 +39,3 @@
 
 (render-app!)
 (init-app!)
-; (viewport/run-watchers! !app-db) ; TODO -- better way to handle this?

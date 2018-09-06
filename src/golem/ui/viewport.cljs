@@ -1,16 +1,27 @@
 (ns golem.ui.viewport
-  (:require [com.rpl.specter :as s]
-            [reagent.core :as r]
+  (:require [reagent.core :as r]
             [reagent.ratom :refer [cursor run! reaction]]
             [golem.math :refer [ceil floor]]
             [golem.board :refer [get-current-board update-board!]]
             [golem.canvas :refer [fill-rect! stroke-lines! get-event-coords]]
             [golem.ui.viewport.grid :as grid]
             [golem.ui.sidebar :as sidebar]
-            [golem.ui.viewport.tiles :as tiles]))
+            [golem.ui.viewport.tiles :as tiles]
+            [cljs.spec.alpha :as s]))
 
-(def default-state {:canvas-tiles nil
-                    :canvas-grid  nil
+
+(s/def ::tiles (s/nilable (partial instance? js/HTMLCanvasElement)))
+(s/def ::grid (s/nilable (partial instance? js/HTMLCanvasElement)))
+(s/def ::container (s/nilable (partial instance? js/HTMLElement)))
+(s/def ::canvas (s/keys :req-un [::tiles ::grid ::container]))
+(s/def ::window :golem.math/coord)
+(s/def ::offset :golem.math/coord)
+(s/def ::scale number?)
+(s/def ::viewport (s/keys :req-un [::canvas ::window ::offset ::scale]))
+
+(def default-state {:canvas {:grid nil
+                             :tiles nil
+                             :container nil}
                     :window       [100 100] ; width of the window (in px)
                     :offset       [0 0]     ; Distance between the board origin and the center of the screen (in px)
                     :scale        1.0})     ; factor to scale when converting from tiles->px

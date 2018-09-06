@@ -1,6 +1,7 @@
 (ns golem.pattern-manager
   (:require [reagent.ratom :refer [cursor]]
-            [golem.pattern :as pattern]))
+            [golem.pattern :as pattern]
+            [cljs.spec.alpha :as s]))
 
 ; Module for maintaining a list of saved patterns that can be loaded later.
 ; Used for three things:
@@ -59,12 +60,25 @@
                             x = 14, y = 8, rule = B3/S23
                             obo$b2o$bo6bo$7bo$7b3o$11b2o$11bobo$11bo!")})
 
+(s/def ::pattern (s/keys :req-un [::name
+                                  ::dimensions
+                                  :golem.interop.rle/pattern
+                                  :golem.interop.rle/pattern-ast
+                                  :golem.board/board]
+                         :opt-un [::origin
+                                  ::offset
+                                  ::comments]))
+
+(s/def ::selected int?)
+(s/def ::latest-id int?)
+(s/def ::patterns (s/map-of int? ::pattern))
+(s/def ::pattern-manager (s/keys :req-un [::selected ::patterns ::latest-id]))
 
 (def default-state {:selected  (first (keys default-patterns))
-                    :saved     default-patterns
+                    :patterns     default-patterns
                     :latest-id (apply max (keys default-patterns))})
 
-(defn saved-patterns [!db] @(cursor !db [:pattern-manager :saved]))
+(defn saved-patterns [!db] @(cursor !db [:pattern-manager :patterns]))
 (defn selected-pattern-id [!db] @(cursor !db [:pattern-manager :selected]))
 (defn selected-pattern [!db] (get (saved-patterns !db) (selected-pattern-id !db)))
 (defn latest-id [!db] @(cursor !db [:pattern-manager :latest-id]))
@@ -74,7 +88,7 @@
   "Imports `pattern` into the pattern manager in `!db`. Returns the ID of the inserted pattern."
   [!db pattern]
   (let [id (pop-id! !db)]
-    (swap! !db assoc-in [:pattern-manager :saved id] pattern)
+    (swap! !db assoc-in [:pattern-manager :patterns id] pattern)
     id))
 
 (defn select-pattern!

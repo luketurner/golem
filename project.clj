@@ -13,7 +13,8 @@
                  [org.clojure/core.async "0.4.474"]
                  [reagent "0.7.0"]
                  [com.rpl/specter "1.1.1"]
-                 [re-frisk "0.5.4"]]
+                 [re-frisk "0.5.4"]
+                 [expound "0.7.1"]]
 
   :plugins [[lein-figwheel "0.5.16"]
             [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
