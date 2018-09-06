@@ -32,8 +32,6 @@
    Effectively allows us to size the element with CSS and scale our rendering logic appropriately."
   [!viewport !el]
   (when-let [el @!el]
-    (println "resize-viewport!")
-
     ; TODO -- if this doesn't mutate !viewport (because the values are unchanged) does it still trigger observers?
     (swap! !viewport assoc :window [(.-clientWidth el) (.-clientHeight el)])))
 
