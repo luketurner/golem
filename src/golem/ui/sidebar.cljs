@@ -36,8 +36,7 @@
 (defn component
   [!db]
   (let [patterns (pattern-manager/saved-patterns !db)
-        selected-pattern-id (pattern-manager/selected-pattern-id !db)
-        selected-pattern (pattern-manager/selected-pattern !db)]
+        selected-pattern-id (pattern-manager/selected-pattern-id !db)]
     (vec
       (concat [:div.sidebar [:h1.sidebar-header "Pattern Library"]]
               [(into [:div.sidebar-body (for [[id {:keys [name board] [dim-x dim-y] :dimensions pattern-str :pattern :as pattern}] patterns]
@@ -52,7 +51,7 @@
                 [:textarea.import-field {:placeholder "Paste RLE to import..." :ref #(set-import-ref! !db %)}]
                 [:button {:on-click #(import-field-content! !db)} "Import RLE"]
                 [:label "Export to RLE"]
-                [:textarea.export-field {:read-only true :value (pattern/pattern->rle selected-pattern) :ref #(set-export-ref! !db %)}]
+                [:textarea.export-field {:read-only true :value (pattern-manager/export-pattern !db selected-pattern-id) :ref #(set-export-ref! !db %)}]
                 [:button {:on-click #(select-export-text! !db)} "Select All"]]]))))
    
    
