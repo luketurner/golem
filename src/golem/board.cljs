@@ -1,6 +1,7 @@
 (ns golem.board
   (:require [reagent.ratom :refer [cursor reaction]]
-            [cljs.spec.alpha :as s]))
+            [cljs.spec.alpha :as s]
+            [com.rpl.specter :as st]))
 
 ; A board is a HashSet of tiles, e.g. #{[1 2] [4 -1]}
 ; All of the tiles in the board are considered "alive." (All other tiles are assumed dead.)
@@ -73,11 +74,11 @@
 (defn step
   "Increments the board one unit of time."
   [board]
-  (->> board
-       (map block)                                     ; build list of sets of all possibly affected coords
-       (reduce into)                                        ; flatten into single set
-       (filter #(lives? board %))                           ; remove all coords that should not be alive
-       (into #{})))
+  (let [mlives? (memoize (partial lives? board))]
+    (->> board
+         (st/select [st/ALL (st/view block) (st/view (partial filter mlives?))])
+         (apply concat)
+         (set))))
 
 ;; Getter functions
 
