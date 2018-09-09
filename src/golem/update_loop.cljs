@@ -22,7 +22,7 @@
 (defn disable! [!db] (swap! !db assoc-in [:update-loop :enabled] false))
 (defn enable! [!db] (swap! !db assoc-in [:update-loop :enabled] true))
 (defn toggle! [!db] (swap! !db update-in [:update-loop :enabled] not))
-(defn inc-rate! [!db ms] (swap! !db update-in [:update-loop :interval] #(max 0 (+ % ms))))
+(defn inc-rate! [!db ms] (swap! !db update-in [:update-loop :interval] #(max 1 (+ % ms))))
 
 (defn run-loop! [!db update-fn]
   (let [!interval (cursor !db [:update-loop :interval])
