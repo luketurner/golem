@@ -2,8 +2,18 @@
   (:require [reagent.ratom :refer [cursor]]
             [golem.interop.rle :as rle]
             [golem.pattern_manager :as pattern-manager]
-            [golem.pattern :as pattern]))
+            [golem.pattern :as pattern]
+            [cljs.spec.alpha :as s]))
 
+(s/def ::sidebar (s/keys :req-un [::open ::import-ref ::export-ref]))
+(s/def ::open boolean?)
+(s/def ::import-ref (s/nilable (partial instance? js/HTMLElement)))
+(s/def ::export-ref (s/nilable (partial instance? js/HTMLElement)))
+
+
+(def default-state {:open false
+                    :import-ref nil
+                    :export-ref nil})
 
 (defn is-open?
   [!db]

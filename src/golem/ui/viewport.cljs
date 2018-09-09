@@ -27,6 +27,10 @@
                     :scale        1.0})     ; factor to scale when converting from tiles->px
 
 
+(defn viewport-cursor [!db] (cursor !db [:ui :viewport]))
+(defn canvas-container-cursor [!viewport] (cursor !viewport [:canvas :container]))
+
+
 (defn resize-viewport!
   "Mutates :window to match the actual rendered width/height in the client browsers.
    Effectively allows us to size the element with CSS and scale our rendering logic appropriately."
@@ -49,9 +53,9 @@
    The view is defined by an offset (where the offset 0,0 indicates the origin is in the center of the view)
    and by a scale (or 'zoom') factor."
   [!db]
-  (let [!viewport (cursor !db [:viewport])
+  (let [!viewport (viewport-cursor !db)
         !board (reaction (get-current-board !db))
-        !canvas-container (cursor !viewport [:canvas :container])
+        !canvas-container (canvas-container-cursor !viewport)
         !ui (cursor !db [:ui])]
 
     (run-resize-viewport! !viewport !canvas-container)

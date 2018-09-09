@@ -1,7 +1,14 @@
 (ns golem.update_loop
   (:require [reagent.ratom :refer [run! cursor]]
-            [golem.handlers :refer [set-interval! clear-interval!]]))
+            [golem.handlers :refer [set-interval! clear-interval!]]
+            [cljs.spec.alpha :as s]))
 
+(s/def ::update-loop (s/keys :req-un []))
+(s/def ::interval pos-int?)
+(s/def ::enabled boolean?)
+
+(def default-state {:interval 100
+                    :enabled  true})
 
 (defn is-enabled? [!db] @(cursor !db [:update-loop :enabled]))
 (defn get-rate [!db] @(cursor !db [:update-loop :interval]))
@@ -26,5 +33,5 @@
         !enabled? (cursor !db [:update-loop :enabled])]
     (run!
       (if @!enabled?
-        (set-interval! :update-loop @!interval update-fn)
-        (clear-interval! :update-loop)))))
+        (set-interval! !db :update-loop @!interval update-fn)
+        (clear-interval! !db :update-loop)))))

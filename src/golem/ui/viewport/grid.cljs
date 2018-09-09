@@ -45,7 +45,7 @@
 
 (defn component
   [!db]
-  (let [!viewport (cursor !db [:viewport])
+  (let [!viewport (cursor !db [:ui :viewport])
         !canvas (cursor !viewport [:canvas :grid])]
     (run-redraw-grid! !viewport !canvas)
     (fn [!db]

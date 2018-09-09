@@ -1,7 +1,14 @@
 (ns golem.ui.app
   (:require [golem.ui.viewport :as viewport]
             [golem.ui.header :as header]
-            [golem.ui.sidebar :as sidebar]))
+            [golem.ui.sidebar :as sidebar]
+            [cljs.spec.alpha :as s]))
+
+(s/def ::ui (s/keys :req-un [:golem.ui.sidebar/sidebar
+                             :golem.ui.viewport/viewport]))
+
+(def default-state {:sidebar sidebar/default-state
+                    :viewport viewport/default-state})
 
 (defn footer
   [!db]
@@ -10,8 +17,7 @@
    [:div [:a {:href "https://github.com/luketurner/golem"} "Github"]]])
 
 (defn component [!db]
-  (let [db @!db
-        sidebar? (sidebar/is-open? !db)]
+  (let [sidebar? (sidebar/is-open? !db)]
     [:div.app-container
       [:div.app-header-container [header/component !db]]
       [:div.app-main-container

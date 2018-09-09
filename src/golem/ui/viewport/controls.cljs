@@ -5,11 +5,11 @@
 
 (defn shift-offset!
   [!db offset]
-  (swap! !db update-in [:viewport :offset] #(vec (map + % (map (partial * base-length) offset))))) ; todo -abstract this better
-(defn rescale! [!db mult] (swap! (cursor !db [:viewport :scale]) * mult))
+  (swap! !db update-in [:ui :viewport :offset] #(vec (map + % (map (partial * base-length) offset))))) ; todo -abstract this better
+(defn rescale! [!db mult] (swap! (cursor !db [:ui :viewport :scale]) * mult))
 
 (defn component [!db]
-  (let [!scale (cursor !db [:viewport :scale])]
+  (let [!scale (cursor !db [:ui :viewport :scale])]
     [:div.viewport-controls
       [:div.movers-label "Center: "]
       [:div.movers

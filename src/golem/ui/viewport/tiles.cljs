@@ -33,7 +33,7 @@
 
 (defn component
   [!db]
-  (let [!viewport (cursor !db [:viewport])
+  (let [!viewport (cursor !db [:ui :viewport])
         !board (reaction (get-current-board !db))
         !canvas (cursor !viewport [:canvas :tiles])]
     (run-redraw-tiles! !viewport !canvas !board)
