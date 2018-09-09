@@ -55,14 +55,14 @@
   [coll min-size max-size]
   (if (< max-size (count coll)) (take min-size coll) coll))
 
-(defn num-living-neighbors
+(defn- num-living-neighbors
   "Returns the number of living neighbors on the board for given tile."
   [board tile]
   (->> tile
        (neighbors)
        (reduce #(if (board %2) (inc %1) %1) 0)))
 
-(defn lives?
+(defn- lives?
   "Returns true if the tile lives on the next step, false if it dies."
   [board tile]
   (let [count (num-living-neighbors board tile)]
@@ -91,16 +91,6 @@
   (when (< 1 (count @(cursor !db [:board :history])))
     (swap! !db update-in [:board :history] pop)))
 
-
-(defn toggle-tile!
-  "Mutates board cursor by inserting tile, or removing it if it already exists."
-  [!db tile]
-  (update-board! !db
-                 (fn [old-board]
-                   (if (contains? old-board tile)
-                     (disj old-board tile)
-                     (conj old-board tile)))))
-
 (defn update-board!
   "Generates a new board by calling update-fn on the current board, then pushes the result onto
    the board history. Automatically handles cleaning too-large histories.
@@ -118,6 +108,15 @@
              (-> history
                  (conj (->> history (first) (update-fn) (enforce-boundary boundary)))
                  (drop-overflow min-history max-history))))))
+
+(defn toggle-tile!
+  "Mutates board cursor by inserting tile, or removing it if it already exists."
+  [!db tile]
+  (update-board! !db
+                 (fn [old-board]
+                   (if (contains? old-board tile)
+                     (disj old-board tile)
+                     (conj old-board tile)))))
 
 (defn push-board!
   "Pushes a new board to the front of the board history."
