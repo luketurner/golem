@@ -1,9 +1,10 @@
 (ns golem.db
-  (:require [reagent.core :as reagent :refer [atom]]
+  (:require [reagent.core :refer [atom]]
             [golem.board :refer [default-state] :rename {default-state board-state}]
             [golem.pattern_manager :refer [default-state] :rename {default-state pattern-manager-state}]
             [golem.update_loop :refer [default-state] :rename {default-state update-loop-state}]
             [golem.ui.app :refer [default-state] :rename {default-state ui-state}]
+            [golem.util :refer [debug?]]
             [cljs.spec.alpha :as s]
             [expound.alpha :refer [expound]]))
 
@@ -35,7 +36,7 @@
 ; This allows all state to be introspected by re-frisk, providing maximum visibility.
 ; However, it does also mean that app state cannot be wantonly serialized and loaded
 ; without re-running app init code to reset handler IDs and stuff.
-(defonce !app-db (atom default-state :validator valid-state?))
+(defonce !app-db (atom default-state :validator (if debug? valid-state? (constantly true))))
 
 ; note -- fairly dangerous, since we lose track of existing interval IDs
 (defn reset-state! [] (reset! !app-db default-state))

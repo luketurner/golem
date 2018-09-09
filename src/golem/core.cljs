@@ -8,13 +8,10 @@
             [golem.board :as board]
             [golem.update_loop :as update-loop]
             [golem.ui.viewport :as viewport]
+            [golem.util :refer [debug?]]
             [golem.pattern_manager :as pattern-manager]))
 
 (enable-console-print!)
-
-; debug builds include re-frisk and other diagnostic tools missing from production builds.
-(def ^boolean debug? ^boolean js/goog.DEBUG)
-(when debug? (print "debug mode enabled"))
 
 (defn render-app!
   "Renders the application into the #app element on the screen. Should be called exactly once on app startup.
@@ -34,6 +31,7 @@
 (defn on-js-reload [] (init-app!))                          ; reset app state+handlers
 
 (when debug?
+  (print "debug mode enabled")
   (frisk/enable-frisk! {:x 100 :y 500})
   (frisk/add-data :app-db !app-db))
 

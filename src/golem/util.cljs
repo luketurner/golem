@@ -4,6 +4,10 @@
    Most of the functions just wrap existing JS functions to add a more convenient API."
   (:require [cljs.spec.alpha :as s]))
 
+; this is true for the `figwheel` build and false for the `min` build.
+; note -- use ^boolean hints so all debug code is stripped out by tree shaking
+(def ^boolean debug? ^boolean js/goog.DEBUG)
+
 (s/def ::coord (s/tuple int? int?))
 
 (defn ceil [x] (.ceil js/Math x))
