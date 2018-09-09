@@ -1,7 +1,6 @@
 (ns golem.ui.viewport.input
   (:require [golem.ui.viewport.math :refer [base-length calc-origin px->tile]]
             [golem.ui.viewport.canvas :refer [get-event-coords]]
-            [golem.math :refer [floor ceil]]
             [golem.board :refer [toggle-tile!]]))
 
 

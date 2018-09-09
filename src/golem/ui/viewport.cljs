@@ -1,7 +1,6 @@
 (ns golem.ui.viewport
   (:require [reagent.core :as r]
             [reagent.ratom :refer [cursor run! reaction]]
-            [golem.math :refer [ceil floor]]
             [golem.board :refer [get-current-board update-board!]]
             [golem.canvas :refer [fill-rect! stroke-lines! get-event-coords]]
             [golem.ui.viewport.grid :as grid]
@@ -15,8 +14,8 @@
 (s/def ::grid (s/nilable (partial instance? js/HTMLCanvasElement)))
 (s/def ::container (s/nilable (partial instance? js/HTMLElement)))
 (s/def ::canvas (s/keys :req-un [::tiles ::grid ::container]))
-(s/def ::window :golem.math/coord)
-(s/def ::offset :golem.math/coord)
+(s/def ::window :golem.util/coord)
+(s/def ::offset :golem.util/coord)
 (s/def ::scale number?)
 (s/def ::viewport (s/keys :req-un [::canvas ::window ::offset ::scale]))
 

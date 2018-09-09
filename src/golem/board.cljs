@@ -11,11 +11,11 @@
 ; the head of the :history list represents the current board state,
 ; the 2nd element is the previous state, and so forth.
 
-(s/def ::board (s/coll-of :golem.math/coord :kind set?))
+(s/def ::board (s/coll-of :golem.util/coord :kind set?))
 (s/def ::history (s/coll-of ::board :kind seq?))
 (s/def ::min-history int?)
 (s/def ::max-history int?)
-(s/def ::boundary (s/tuple :golem.math/coord :golem.math/coord))
+(s/def ::boundary (s/tuple :golem.util/coord :golem.util/coord))
 (s/def :golem.board.state/board (s/keys :req-un [::history ::min-history ::max-history ::boundary]))
 
 (def default-state {:history     '()

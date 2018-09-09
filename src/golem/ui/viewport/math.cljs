@@ -1,6 +1,6 @@
 (ns golem.ui.viewport.math
   (:require [com.rpl.specter :as s]
-            [golem.math :refer [floor ceil]]))
+            [golem.util :refer [floor ceil]]))
 
 ; This module mostly does coordinate mapping stuff. Would be nice to get it better abstracted.
 
