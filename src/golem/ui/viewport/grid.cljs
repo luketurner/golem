@@ -1,8 +1,10 @@
 (ns golem.ui.viewport.grid
   (:require [reagent.ratom :refer [cursor run!]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
-            [golem.canvas :as canvas]))
+            [golem.canvas :as canvas]
+            [golem.ui.viewport.cursors :as cursors]))
 
+(defn canvas-cursor [!viewport] (cursor !viewport [:canvas :grid]))
 
 (defn draw-axes!
   [ctx [win-x win-y] [origin-x origin-y]]
@@ -40,13 +42,13 @@
   [!viewport !canvas]
   (run!
     (when-let [canvas @!canvas]
-     (canvas/set-dimensions! canvas @(cursor !viewport [:window])) ; TODO - is there a better option than calling this every time?
+     (canvas/set-dimensions! canvas @(cursors/window !viewport)) ; TODO - is there a better option than calling this every time?
      (redraw-grid! @!viewport @!canvas))))
 
 (defn component
   [!db]
-  (let [!viewport (cursor !db [:ui :viewport])
-        !canvas (cursor !viewport [:canvas :grid])]
+  (let [!viewport (cursors/viewport !db)
+        !canvas (canvas-cursor !viewport)]
     (run-redraw-grid! !viewport !canvas)
     (fn [!db]
      [:canvas.viewport-grid {:ref #(reset! !canvas %)}])))

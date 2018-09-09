@@ -1,12 +1,13 @@
 (ns golem.ui.viewport.controls
   (:require [reagent.ratom :refer [cursor]]
             [golem.ui.viewport.math :refer [base-length]]
-            [com.rpl.specter :as s]))
+            [com.rpl.specter :as s]
+            [golem.ui.viewport.cursors :as cursors]))
 
 (defn shift-offset!
   [!db offset]
-  (swap! !db update-in [:ui :viewport :offset] #(vec (map + % (map (partial * base-length) offset))))) ; todo -abstract this better
-(defn rescale! [!db mult] (swap! (cursor !db [:ui :viewport :scale]) * mult))
+  (swap! (cursors/offset !db) #(vec (map + % (map (partial * base-length) offset))))) ; todo -abstract this better
+(defn rescale! [!db mult] (swap! (cursors/scale !db) * mult))
 
 (defn component [!db]
   (let [!scale (cursor !db [:ui :viewport :scale])]

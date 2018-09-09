@@ -2,8 +2,11 @@
   (:require [reagent.ratom :refer [cursor run! reaction]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range? tile->px]]
             [golem.ui.viewport.input :refer [handle-click-event!]]
+            [golem.ui.viewport.cursors :as cursors]
             [golem.canvas :refer [fill-rect! set-dimensions!]]
             [golem.board :refer [get-current-board]]))
+
+(defn canvas-cursor [!viewport] (cursor !viewport [:canvas :tile]))
 
 (defn- draw-tile!
   "Draws a single tile onto the canvas. Starts at the lower-left hand corner, and draws up and to the right."
@@ -27,15 +30,15 @@
   [!viewport !canvas !board]
   (run!
     (when-let [canvas @!canvas]
-      (set-dimensions! canvas @(cursor !viewport [:window])) ; TODO - is there a better option than calling this every time?
+      (set-dimensions! canvas @(cursors/window !viewport)) ; TODO - is there a better option than calling this every time?
       (redraw-tiles! @!viewport @!canvas @!board))))
 
 
 (defn component
   [!db]
-  (let [!viewport (cursor !db [:ui :viewport])
+  (let [!viewport (cursors/viewport !db)
         !board (reaction (get-current-board !db))
-        !canvas (cursor !viewport [:canvas :tiles])]
+        !canvas (canvas-cursor !viewport)]
     (run-redraw-tiles! !viewport !canvas !board)
     (fn [!db]
      [:canvas.viewport-tiles {:ref      #(reset! !canvas %)

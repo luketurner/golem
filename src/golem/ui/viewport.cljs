@@ -7,7 +7,8 @@
             [golem.ui.viewport.grid :as grid]
             [golem.ui.sidebar :as sidebar]
             [golem.ui.viewport.tiles :as tiles]
-            [cljs.spec.alpha :as s]))
+            [cljs.spec.alpha :as s]
+            [golem.ui.viewport.cursors :as cursors]))
 
 
 (s/def ::tiles (s/nilable (partial instance? js/HTMLCanvasElement)))
@@ -26,10 +27,7 @@
                     :offset       [0 0]     ; Distance between the board origin and the center of the screen (in px)
                     :scale        1.0})     ; factor to scale when converting from tiles->px
 
-
-(defn viewport-cursor [!db] (cursor !db [:ui :viewport]))
 (defn canvas-container-cursor [!viewport] (cursor !viewport [:canvas :container]))
-
 
 (defn resize-viewport!
   "Mutates :window to match the actual rendered width/height in the client browsers.
@@ -37,7 +35,7 @@
   [!viewport !el]
   (when-let [el @!el]
     ; TODO -- if this doesn't mutate !viewport (because the values are unchanged) does it still trigger observers?
-    (swap! !viewport assoc :window [(.-clientWidth el) (.-clientHeight el)])))
+    (reset! (cursors/window !viewport) [(.-clientWidth el) (.-clientHeight el)])))
 
 (defn run-resize-viewport!
   "Calls resize-viewport! in a run-loop so that it re-runs if any changes are made to the parameters.
@@ -53,10 +51,8 @@
    The view is defined by an offset (where the offset 0,0 indicates the origin is in the center of the view)
    and by a scale (or 'zoom') factor."
   [!db]
-  (let [!viewport (viewport-cursor !db)
-        !board (reaction (get-current-board !db))
-        !canvas-container (canvas-container-cursor !viewport)
-        !ui (cursor !db [:ui])]
+  (let [!viewport (cursors/viewport !db)
+        !canvas-container (canvas-container-cursor !viewport)]
 
     (run-resize-viewport! !viewport !canvas-container)
 
