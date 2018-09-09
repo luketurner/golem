@@ -62,8 +62,8 @@
 
 (s/def ::pattern (s/keys :req-un [::name
                                   ::dimensions
-                                  :golem.interop.rle/pattern
-                                  :golem.interop.rle/pattern-ast
+                                  :golem.pattern.rle/pattern
+                                  :golem.pattern.rle/pattern-ast
                                   :golem.board/board]
                          :opt-un [::origin
                                   ::offset
