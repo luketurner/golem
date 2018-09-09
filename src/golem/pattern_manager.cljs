@@ -1,7 +1,8 @@
 (ns golem.pattern_manager
   (:require [reagent.ratom :refer [cursor]]
             [golem.rle :as rle]
-            [cljs.spec.alpha :as s]))
+            [cljs.spec.alpha :as s]
+            [golem.board :as board]))
 
 ; Module for maintaining a list of saved patterns that can be loaded later.
 ; Used for three things:
@@ -130,7 +131,7 @@
   (use-selected-pattern! !db))
 
 (defn import-select-and-use-pattern!
-  "Imports `pattern`, selects it, and displays it on the screen."
-  [!db pattern]
-  (let [id (import-pattern! !db pattern)]
+  "Imports `rle-str`, selects it, and displays it on the screen."
+  [!db rle-str]
+  (let [id (import-pattern! !db rle-str)]
     (select-and-use-pattern! !db id)))

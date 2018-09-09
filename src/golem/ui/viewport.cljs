@@ -2,9 +2,7 @@
   (:require [reagent.core :as r]
             [reagent.ratom :refer [cursor run! reaction]]
             [golem.board :refer [get-current-board update-board!]]
-            [golem.canvas :refer [fill-rect! stroke-lines! get-event-coords]]
             [golem.ui.viewport.grid :as grid]
-            [golem.ui.sidebar :as sidebar]
             [golem.ui.viewport.tiles :as tiles]
             [cljs.spec.alpha :as s]
             [golem.ui.viewport.cursors :as cursors]))

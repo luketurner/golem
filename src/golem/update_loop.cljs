@@ -1,6 +1,5 @@
 (ns golem.update_loop
   (:require [reagent.ratom :refer [run! cursor]]
-            [golem.handlers :refer [set-interval! clear-interval!]]
             [cljs.spec.alpha :as s]
             [golem.util :as util]))
 

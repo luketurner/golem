@@ -1,7 +1,6 @@
 (ns golem.ui.sidebar
   (:require [reagent.ratom :refer [cursor]]
             [golem.pattern_manager :as pattern-manager]
-            [golem.pattern :as pattern]
             [cljs.spec.alpha :as s]))
 
 (s/def ::sidebar (s/keys :req-un [::open ::import-ref ::export-ref]))
@@ -25,7 +24,7 @@
 (defn get-export-ref [!db] @(cursor !db [:ui :sidebar :export-ref]))
 (defn import-field-content! [!db]
   (when-let [el (get-import-ref !db)]
-    (->> el (.-value) (pattern/rle->pattern) (pattern-manager/import-select-and-use-pattern! !db))))
+    (->> el (.-value) (pattern-manager/import-select-and-use-pattern! !db))))
 
 (defn select-export-text!
   [!db]

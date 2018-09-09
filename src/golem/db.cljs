@@ -3,7 +3,6 @@
             [golem.board :refer [default-state] :rename {default-state board-state}]
             [golem.pattern_manager :refer [default-state] :rename {default-state pattern-manager-state}]
             [golem.update_loop :refer [default-state] :rename {default-state update-loop-state}]
-            [golem.handlers :refer [default-state] :rename {default-state handlers-state}]
             [golem.ui.app :refer [default-state] :rename {default-state ui-state}]
             [cljs.spec.alpha :as s]
             [expound.alpha :refer [expound]]))
@@ -13,7 +12,6 @@
   (s/keys :req-un [:golem.board.state/board
                    :golem.pattern_manager/pattern-manager
                    :golem.update_loop/update-loop
-                   :golem.handlers/handlers
                    :golem.ui.app/ui]))
 
 ; default (or initial) state for the app db.
@@ -22,7 +20,6 @@
   {:board           board-state
    :pattern-manager pattern-manager-state
    :update-loop     update-loop-state
-   :handlers        handlers-state
    :ui              ui-state})
 
 
