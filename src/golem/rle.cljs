@@ -1,4 +1,4 @@
-(ns golem.pattern.rle
+(ns golem.rle
   (:require [clojure.string :as string]
             [golem.util :as util]
             [com.rpl.specter :refer [transform ALL MAP-VALS]]

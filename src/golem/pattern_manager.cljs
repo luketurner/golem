@@ -1,6 +1,6 @@
 (ns golem.pattern_manager
   (:require [reagent.ratom :refer [cursor]]
-            [golem.pattern.rle :as rle]
+            [golem.rle :as rle]
             [cljs.spec.alpha :as s]))
 
 ; Module for maintaining a list of saved patterns that can be loaded later.
