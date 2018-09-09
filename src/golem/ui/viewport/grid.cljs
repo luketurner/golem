@@ -1,7 +1,7 @@
 (ns golem.ui.viewport.grid
   (:require [reagent.ratom :refer [cursor run!]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
-            [golem.canvas :as canvas]
+            [golem.ui.viewport.canvas :as canvas]
             [golem.ui.viewport.cursors :as cursors]))
 
 (defn canvas-cursor [!viewport] (cursor !viewport [:canvas :grid]))

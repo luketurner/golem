@@ -1,8 +1,9 @@
 (ns golem.ui.viewport.input
   (:require [golem.ui.viewport.math :refer [base-length calc-origin px->tile]]
+            [golem.ui.viewport.canvas :refer [get-event-coords]]
             [golem.math :refer [floor ceil]]
-            [golem.board :refer [toggle-tile!]]
-            [golem.canvas :refer [get-event-coords]]))
+            [golem.board :refer [toggle-tile!]]))
+
 
 (defn handle-click-event!
   "Contains logic for handling click events anywhere on the viewport canvas.

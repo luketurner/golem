@@ -3,7 +3,7 @@
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range? tile->px]]
             [golem.ui.viewport.input :refer [handle-click-event!]]
             [golem.ui.viewport.cursors :as cursors]
-            [golem.canvas :refer [fill-rect! set-dimensions!]]
+            [golem.ui.viewport.canvas :refer [fill-rect! set-dimensions!]]
             [golem.board :refer [get-current-board]]))
 
 (defn canvas-cursor [!viewport] (cursor !viewport [:canvas :tile]))

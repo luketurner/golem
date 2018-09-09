@@ -1,4 +1,4 @@
-(ns golem.canvas)
+(ns golem.ui.viewport.canvas)
 
 (defn fill-rect! [ctx x y width height style]
   (set! (.-fillStyle ctx) style)
