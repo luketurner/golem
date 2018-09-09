@@ -25,7 +25,7 @@
   [viewport [x y]]
   (let [len (scaled-len viewport)
         [ox oy] (calc-origin viewport)
-        div #(-> % (/ len) ((if (< % 0) floor floor)))]
+        div #(-> % (/ len) (floor))]
     [(div (- x ox)) (div (- oy y))]))
 
 (defn tile->px
