@@ -1,6 +1,5 @@
 (ns golem.board
-  (:require [golem.tile :as tile]
-            [reagent.ratom :refer [cursor reaction]]
+  (:require [reagent.ratom :refer [cursor reaction]]
             [cljs.spec.alpha :as s]))
 
 ; A board is a HashSet of tiles, e.g. #{[1 2] [4 -1]}
@@ -23,6 +22,26 @@
                     :max-history 100
                     :boundary [[-1000000 -1000000] [1000000 1000000]]})
 
+;; Implementation of game logic (culminating in `step` method)
+
+(defn- neighbors
+  "Returns the set of all eight adjacent points for the given coord, not including the coord itself."
+  [[x y]]
+  #{[(inc x) (dec y)]
+    [(inc x) y]
+    [(inc x) (inc y)]
+    [x (dec y)]
+    ; [x y] completes the pattern
+    [x (inc y)]
+    [(dec x) (dec y)]
+    [(dec x) y]
+    [(dec x) (inc y)]})
+
+(defn- block
+  "Returns the set of all nine points surrounding and including given coord.
+   (i.e. the 'block' of the board surrounding it)"
+  [tile]
+  (conj (neighbors tile) tile))
 
 (defn- enforce-boundary
   [boundary board]
@@ -35,6 +54,52 @@
 (defn- drop-overflow
   [coll min-size max-size]
   (if (< max-size (count coll)) (take min-size coll) coll))
+
+(defn num-living-neighbors
+  "Returns the number of living neighbors on the board for given tile."
+  [board tile]
+  (->> tile
+       (neighbors)
+       (reduce #(if (board %2) (inc %1) %1) 0)))
+
+(defn lives?
+  "Returns true if the tile lives on the next step, false if it dies."
+  [board tile]
+  (let [count (num-living-neighbors board tile)]
+    (if (board tile)
+      (or (= count 2) (= count 3))
+      (= count 3))))
+
+(defn step
+  "Increments the board one unit of time."
+  [board]
+  (->> board
+       (map block)                                     ; build list of sets of all possibly affected coords
+       (reduce into)                                        ; flatten into single set
+       (filter #(lives? board %))                           ; remove all coords that should not be alive
+       (into #{})))
+
+;; Getter functions
+
+(defn get-current-board [!db] (first @(cursor !db [:board :history])))
+
+;; Update functions
+
+(defn undo!
+  "Performs an undo operation by popping the most recent element off the history."
+  [!db]
+  (when (< 1 (count @(cursor !db [:board :history])))
+    (swap! !db update-in [:board :history] pop)))
+
+
+(defn toggle-tile!
+  "Mutates board cursor by inserting tile, or removing it if it already exists."
+  [!db tile]
+  (update-board! !db
+                 (fn [old-board]
+                   (if (contains? old-board tile)
+                     (disj old-board tile)
+                     (conj old-board tile)))))
 
 (defn update-board!
   "Generates a new board by calling update-fn on the current board, then pushes the result onto
@@ -59,46 +124,5 @@
   [!db board]
   (update-board! !db #(identity board)))
 
-
-(defn get-current-board [!db] (first @(cursor !db [:board :history])))
-
-(defn undo!
-  "Performs an undo operation by popping the most recent element off the history."
-  [!db]
-  (when (< 1 (count @(cursor !db [:board :history])))
-    (swap! !db update-in [:board :history] pop)))
-
-(defn num-living-neighbors
-  "Returns the number of living neighbors on the board for given tile."
-  [board tile]
-  (->> tile
-       (tile/neighbors)
-       (reduce #(if (board %2) (inc %1) %1) 0)))
-
-(defn lives?
-  "Returns true if the tile lives on the next step, false if it dies."
-  [board tile]
-  (let [count (num-living-neighbors board tile)]
-    (if (board tile)
-      (or (= count 2) (= count 3))
-      (= count 3))))
-
-(defn toggle-tile!
-  "Mutates board cursor by inserting tile, or removing it if it already exists."
-  [!db tile]
-  (update-board! !db
-                 (fn [old-board]
-                   (if (contains? old-board tile)
-                     (disj old-board tile)
-                     (conj old-board tile)))))
-
-(defn step
-  "Increments the board one unit of time."
-  [board]
-  (->> board
-       (map tile/block)                                     ; build list of sets of all possibly affected coords
-       (reduce into)                                        ; flatten into single set
-       (filter #(lives? board %))                           ; remove all coords that should not be alive
-       (into #{})))
-
 (defn step! [!app-db] (update-board! !app-db step))
+
