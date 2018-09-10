@@ -10,8 +10,8 @@
     [:button.undo {:on-click #(board/undo! !db)} "undo"]
     [:button.pause {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]
     [:button.reset {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]
-    [:button.mm {:on-click #(update-loop/inc-rate! !db 100)} "--"]
-    [:button.m {:on-click #(update-loop/inc-rate! !db 10)} "-"]
-    [:div.rate (str (/ 1000 (update-loop/get-rate !db)) " fps")]
-    [:button.p {:on-click #(update-loop/inc-rate! !db -10)} "+"]
-    [:button.pp {:on-click #(update-loop/inc-rate! !db -100)} "++"]])
+    [:button.mm {:on-click #(update-loop/inc-fps! !db -10)} "--"]
+    [:button.m {:on-click #(update-loop/inc-fps! !db -1)} "-"]
+    [:div.rate (str (update-loop/get-fps !db) " fps")]
+    [:button.p {:on-click #(update-loop/inc-fps! !db 1)} "+"]
+    [:button.pp {:on-click #(update-loop/inc-fps! !db 10)} "++"]])
