@@ -108,7 +108,8 @@
            (fn [history]
              (-> history
                  (conj (->> history (first) (update-fn) (enforce-boundary boundary)))
-                 (drop-overflow min-history max-history))))))
+                 (drop-overflow min-history max-history)
+                 ((partial apply list)))))))
 
 (defn toggle-tile!
   "Mutates board cursor by inserting tile, or removing it if it already exists."
