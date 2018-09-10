@@ -79,7 +79,7 @@
          #C http://www.conwaylife.com/patterns/switchengine_synth.rle
          x = 14, y = 8, rule = B3/S23
          obo$b2o$bo6bo$7bo$7b3o$11b2o$11bobo$11bo!"]
-       (map #(vector %1 (rle/parse-rle %2)) (range 1))
+       (map #(vector %1 (rle/parse-rle %2)) (drop 1 (range)))
        (into {})))
 
 (def default-state {:patterns  default-patterns
