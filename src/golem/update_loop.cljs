@@ -10,7 +10,7 @@
                                       ::enabled
                                       ::interval-id]))
 
-(def default-state {:fps 60
+(def default-state {:fps 15
                     :enabled  true
                     :interval-id nil})
 
