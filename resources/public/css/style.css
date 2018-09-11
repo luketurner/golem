@@ -10,11 +10,11 @@ body, html, #app { height: 100%; margin: 0; }
 .loading-message p { margin-bottom: 0; }
 
 /* app container (UI layout) */
-.app-container { display: grid; grid: "header" 50px "main" 1fr "footer" 50px; min-height: 100%; }
+.app-container { display: grid; grid: "header" auto "main" 1fr "footer" 50px; min-height: 100%; }
 .app-header-container { grid-area: header; }
-.app-sidebar-container { position: absolute; left: 0; top: 0; height: 100%; width: 30%; z-index: 10; background-color: rgb(240, 240, 240); }
+.app-sidebar-container { position: absolute; left: 0; top: 0; height: 100%; width: 15rem; z-index: 10; background-color: rgb(240, 240, 240); }
 .app-main-container { grid-area: main; padding: 5px 0 5px 0; position: relative; }
-.app-footer-container { grid-area: footer; }
+.app-footer-container { grid-area: footer; z-index: 0; }
 
 /* header */
 header { height: 100%; display: grid; grid: "game-ctrl title view-ctrl" 2fr "game-ctrl subtitle view-ctrl" 1fr / 1fr 13rem 1fr; }
@@ -24,6 +24,14 @@ header > .title strong { color: black; font-size: 1.5rem; font-weight: normal; }
 header > .subtitle { grid-area: subtitle; text-align: center; margin: 0; }
 header > .game-controls-container { grid-area: game-ctrl; }
 header > .viewport-controls-container { grid-area: view-ctrl; }
+
+@media (max-width: 45rem) {
+  header { grid: "title title" 1fr "game-ctrl view-ctrl" 2fr; }
+}
+
+@media (max-width: 30rem) {
+  header { grid: "title" 1fr "game-ctrl" 2fr "view-ctrl" 2fr; }
+}
 
 /* game-controls */
 .game-controls { display: grid; grid: "sidebar pad1 undo undo pause reset reset pad2" 50%
@@ -53,7 +61,7 @@ header > .viewport-controls-container { grid-area: view-ctrl; }
 .viewport-controls .scale-down { grid-area: scale-down; }
 
 /* sidebar */
-.sidebar { display: grid; grid: "head" 3rem "body" 1fr "footer" 8rem; height: 100%; }
+.sidebar { display: grid; grid: "head" 3rem "body" 1fr "footer" 8rem; height: 100%; overflow-y: scroll; }
 .sidebar .sidebar-header { grid-area: head; font-size: 1.5rem; margin: auto; font-weight: normal; }
 .sidebar .sidebar-body { grid-area: body; }
 .sidebar .saved-board { display: grid; grid: "name coords" 2fr "rle rle" 1fr / 1fr 1fr; cursor: pointer; padding: 0.5rem; border-top: 1px solid rgb(210, 210, 210); }
