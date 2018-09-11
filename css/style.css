@@ -1,27 +1,23 @@
-/* some style */
-
+/* application-wide styles */
 * { box-sizing: border-box; }
+body { font: 16px 'PT Sans', sans-serif; background-color: rgb(240, 240, 240); }
 body, html, #app { height: 100%; margin: 0; }
+#app { position: relative; }
 
+/* pre-js loading message */
+.loading-message { display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center; }
+.loading-message h2 { margin-top: 0; }
+.loading-message p { margin-bottom: 0; }
 
-body {
-  font: 16px 'PT Sans', sans-serif;
-  background-color: rgb(240, 240, 240);
-}
-
-#app {
-  position: relative;
-}
-
-.app-container { display: grid; grid: "header" 50px "main" 1fr "footer" 50px; min-height: 100%; }
-/* .app-container--sidebar { grid: "header header" 50px "sidebar main" 1fr "footer footer" 50px / 1fr 3fr; } */
+/* app container (UI layout) */
+.app-container { display: grid; grid: "header" auto "main" 1fr "footer" 50px; min-height: 100%; }
 .app-header-container { grid-area: header; }
-.app-sidebar-container { position: absolute; left: 0; top: 0; height: 100%; width: 30%; z-index: 10; background-color: rgb(240, 240, 240); }
+.app-sidebar-container { position: absolute; left: 0; top: 0; height: 100%; width: 15rem; z-index: 10; background-color: rgb(240, 240, 240); }
 .app-main-container { grid-area: main; padding: 5px 0 5px 0; position: relative; }
-.app-footer-container { grid-area: footer; }
+.app-footer-container { grid-area: footer; z-index: 0; }
 
-/* Header settings */
-header { height: 100%; display: grid; grid: "game-ctrl title view-ctrl" 2fr "game-ctrl subtitle view-ctrl" 1fr / 1fr 1fr 1fr; }
+/* header */
+header { height: 100%; display: grid; grid: "game-ctrl title view-ctrl" 2fr "game-ctrl subtitle view-ctrl" 1fr / 1fr 13rem 1fr; }
 header a { color: inherit; text-decoration: inherit; }
 header > .title { grid-area: title; height: 100%; margin: 0; font-size: 1rem; text-align: center; color: rgba(0, 0, 0, 0.4); }
 header > .title strong { color: black; font-size: 1.5rem; font-weight: normal; }
@@ -29,23 +25,43 @@ header > .subtitle { grid-area: subtitle; text-align: center; margin: 0; }
 header > .game-controls-container { grid-area: game-ctrl; }
 header > .viewport-controls-container { grid-area: view-ctrl; }
 
+@media (max-width: 45rem) {
+  header { grid: "title title" 1fr "game-ctrl view-ctrl" 2fr; }
+}
+
+@media (max-width: 30rem) {
+  header { grid: "title" 1fr "game-ctrl" 2fr "view-ctrl" 2fr; }
+}
+
 /* game-controls */
-.game-controls { display: grid; grid: "sidebar cmds-label cmds" 1fr "sidebar rates-label rates" 1fr / 5rem 1fr 2fr; height: 100%; }
-.game-controls .cmds { grid-area: cmds; }
-.game-controls .cmds-label { grid-area: cmds-label; }
-.game-controls .rates { grid-area: rates; }
-.game-controls .rates-label { grid-area: rates-label; }
-.game-controls .sidebar { grid-area: sidebar; margin: auto 0 auto 0; }
+.game-controls { display: grid; grid: "sidebar pad1 undo undo pause reset reset pad2" 50%
+                                      "sidebar pad1 mm   m    rate  p     pp    pad2" 50%
+                                      / 5rem   1fr  2rem 2rem 4rem  2rem  2rem  1fr; height: 100%; }
+.game-controls .sidebar-toggle { grid-area: sidebar; height: 100%; }
+.game-controls .undo { grid-area: undo; }
+.game-controls .pause { grid-area: pause; }
+.game-controls .reset { grid-area: reset; }
+.game-controls .mm { grid-area: mm; }
+.game-controls .m { grid-area: m; }
+.game-controls .rate { grid-area: rate; }
+.game-controls .p { grid-area: p; }
+.game-controls .pp { grid-area: pp; }
 
 /* viewport-controls */
-.viewport-controls { display: grid; grid: "movers-label movers" 1fr "scalers-label scalers" 1fr / 1fr 2fr; }
-.viewport-controls .movers { grid-area: movers; }
-.viewport-controls .movers-label { grid-area: movers-label; }
-.viewport-controls .scalers { grid-area: scalers; }
-.viewport-controls .scalers-label { grid-area: scalers-label; }
+.viewport-controls { height: 100%; display: grid; grid: "pad1 left up   right pad2 scale-up   scale pad3" 50%
+                                                        "pad1 left down right pad2 scale-down scale pad3" 50%
+                                                        / 1fr 2rem 4rem 2rem  1fr  2rem       2rem  2fr; }
+.viewport-controls button { padding: 2px 4px 2px 4px; }
+.viewport-controls .up { grid-area: up; }
+.viewport-controls .left { grid-area: left; }
+.viewport-controls .right { grid-area: right; }
+.viewport-controls .down { grid-area: down; }
+.viewport-controls .scale-up { grid-area: scale-up; }
+.viewport-controls .scale { grid-area: scale; margin:auto; }
+.viewport-controls .scale-down { grid-area: scale-down; }
 
 /* sidebar */
-.sidebar { display: grid; grid: "head" 3rem "body" 1fr "footer" 8rem; height: 100%; }
+.sidebar { display: grid; grid: "head" 3rem "body" 1fr "footer" 8rem; height: 100%; overflow-y: scroll; }
 .sidebar .sidebar-header { grid-area: head; font-size: 1.5rem; margin: auto; font-weight: normal; }
 .sidebar .sidebar-body { grid-area: body; }
 .sidebar .saved-board { display: grid; grid: "name coords" 2fr "rle rle" 1fr / 1fr 1fr; cursor: pointer; padding: 0.5rem; border-top: 1px solid rgb(210, 210, 210); }
@@ -57,10 +73,10 @@ header > .viewport-controls-container { grid-area: view-ctrl; }
 .sidebar .sidebar-footer > textarea { height: 1.2rem; }
 .sidebar .sidebar-footer > label { display: block; padding-top: 0.5rem; }
 
-/* Main settings */
+/* viewport */
 .viewport-container { position: relative; width: 100%; height: 100%; }
 .viewport-tiles { position: absolute; width: 100%; height: 100%; z-index: 2; }
 .viewport-grid { position: absolute; width: 100%; height: 100%; z-index: 1; }
 
-/* Footer settings */
+/* footer */
 footer { text-align: center; }
