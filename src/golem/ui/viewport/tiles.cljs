@@ -1,5 +1,6 @@
 (ns golem.ui.viewport.tiles
-  (:require [reagent.ratom :refer [cursor run! reaction]]
+  (:require [reagent.ratom :refer [cursor reaction]]
+            [golem.util :refer [run-once!]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range? tile->px]]
             [golem.ui.viewport.input :refer [handle-click-event!]]
             [golem.ui.viewport.cursors :as cursors]
@@ -28,7 +29,7 @@
 
 (defn run-redraw-tiles!
   [!viewport !canvas !board]
-  (run!
+  (run-once! :redraw-tiles
     (when-let [canvas @!canvas]
       (set-dimensions! canvas @(cursors/window !viewport)) ; TODO - is there a better option than calling this every time?
       (redraw-tiles! @!viewport @!canvas @!board))))

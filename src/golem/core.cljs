@@ -1,13 +1,10 @@
 (ns golem.core
   (:require [reagent.core :as reagent]
-            [reagent.ratom :refer [run! cursor]]
-            [com.rpl.specter :as s]
             [re-frisk.core :as frisk]
             [golem.db :refer [!app-db]]
             [golem.ui.app :as app]
             [golem.board :as board]
             [golem.update_loop :as update-loop]
-            [golem.ui.viewport :as viewport]
             [golem.util :refer [debug?]]
             [golem.pattern_manager :as pattern-manager]))
 

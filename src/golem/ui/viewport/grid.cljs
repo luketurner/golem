@@ -1,5 +1,6 @@
 (ns golem.ui.viewport.grid
-  (:require [reagent.ratom :refer [cursor run!]]
+  (:require [reagent.ratom :refer [cursor]]
+            [golem.util :refer [run-once!]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range]]
             [golem.ui.viewport.canvas :as canvas]
             [golem.ui.viewport.cursors :as cursors]))
@@ -40,7 +41,7 @@
 (defn run-redraw-grid!
   "Runs redraw-grid! in an observable loop"
   [!viewport !canvas]
-  (run!
+  (run-once! :redraw-grid
     (when-let [canvas @!canvas]
      (canvas/set-dimensions! canvas @(cursors/window !viewport)) ; TODO - is there a better option than calling this every time?
      (redraw-grid! @!viewport @!canvas))))

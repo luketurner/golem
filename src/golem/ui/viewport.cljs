@@ -1,6 +1,7 @@
 (ns golem.ui.viewport
   (:require [reagent.core :as r]
-            [reagent.ratom :refer [cursor run! reaction]]
+            [reagent.ratom :refer [cursor reaction]]
+            [golem.util :refer [run-once!]]
             [golem.ui.viewport.grid :as grid]
             [golem.ui.viewport.tiles :as tiles]
             [cljs.spec.alpha :as s]
@@ -39,7 +40,7 @@
    we have to 'observe' certain properties in the UI state as a proxy."
   [!viewport !el]
   (.addEventListener js/window "resize" #(resize-viewport! !viewport !el))
-  (run!
+  (run-once! :resize-viewport
     (resize-viewport! !viewport !el)))
 
 (defn component

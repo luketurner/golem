@@ -1,5 +1,5 @@
 (ns golem.update_loop
-  (:require [reagent.ratom :refer [run! cursor]]
+  (:require [reagent.ratom :refer [cursor]]
             [cljs.spec.alpha :as s]
             [golem.util :as util]))
 
@@ -10,8 +10,8 @@
                                       ::enabled
                                       ::interval-id]))
 
-(def default-state {:fps 15
-                    :enabled  true
+(def default-state {:fps         15
+                    :enabled     true
                     :interval-id nil})
 
 ;; Cursors
@@ -28,7 +28,7 @@
 (defn run-loop! [!db update-fn]
   (let [!fps (fps !db)
         !enabled? (is-enabled? !db)]
-    (run!
+    (util/run-once! :update-loop
       (if @!enabled?
         (util/set-interval! (interval-id !db) (util/ceil (/ 1000 @!fps)) update-fn)
         (util/clear-interval! (interval-id !db))))))
