@@ -20,7 +20,7 @@
                           (map #(+ (* tile-width %) origin-x))
                           (map #(vector [% 0] [% win-y])))
         row-lines (->> (range y0 (inc y1))
-                       (map #(+ (* tile-width %) origin-y))
+                       (map #(- origin-y (* tile-width %)))
                        (map #(vector [0 %] [win-x %])))]
     (canvas/stroke-lines! ctx (into row-lines column-lines) "rgb(210, 210, 210)")
     (draw-axes! ctx [win-x win-y] [origin-x origin-y])))

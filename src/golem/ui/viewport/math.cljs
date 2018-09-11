@@ -42,6 +42,6 @@
   [viewport [ox oy]]
   (let [{:keys [:scale] :defaults {:scale 1} [wx wy] :window} viewport
         len (* scale base-length)
-        viewport-px [[(- ox) (- oy)]
-                     [(- wx ox) (- wy oy)]]]
-    (s/transform [s/ALL s/ALL] #((if (< % 0) floor ceil) (/ % len)) viewport-px)))
+        viewport-px [[(- ox) (- oy wy)]
+                     [(- wx ox) oy]]]
+    (s/transform [s/ALL s/ALL] #(floor (/ % len)) viewport-px)))
