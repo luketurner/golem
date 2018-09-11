@@ -7,7 +7,7 @@
 (defn component [!db]
   [:div.game-controls
     [:button.sidebar-toggle {:on-click #(sidebar/toggle! !db)} (if (sidebar/is-open? !db) "hide" "show") " patterns"]
-    [:button.undo {:on-click #(board/undo! !db)} "undo"]
+    [:button.undo {:disabled true :title "Temporarily disabled for performance reasons"} "undo"]
     [:button.pause {:on-click #(update-loop/toggle! !db)} (if (update-loop/is-enabled? !db) "pause" "play")]
     [:button.reset {:on-click #(pattern-manager/use-selected-pattern! !db)} "reset"]
     [:button.mm {:on-click #(update-loop/inc-fps! !db -10)} "--"]

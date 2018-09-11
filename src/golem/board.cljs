@@ -12,15 +12,14 @@
 ; the 2nd element is the previous state, and so forth.
 
 (s/def ::board (s/coll-of :golem.util/coord :kind set?))
-(s/def ::history (s/coll-of ::board :kind seq?))
-(s/def ::min-history int?)
-(s/def ::max-history int?)
 (s/def ::boundary (s/tuple :golem.util/coord :golem.util/coord))
-(s/def :golem.board.state/board (s/keys :req-un [::history ::min-history ::max-history ::boundary]))
+(s/def :golem.board.state/board (s/keys :req-un [::board ::boundary]))
 
-(def default-state {:history     '()
-                    :min-history 75
-                    :max-history 100
+(def default-state {:board     #{}
+                    ; TODO -- re-enable history?
+                    ; :history     '()
+                    ; :min-history 75
+                    ; :max-history 100
                     :boundary [[-1000000 -1000000] [1000000 1000000]]})
 
 ;; Implementation of game logic (culminating in `step` method)
@@ -82,34 +81,19 @@
 
 ;; Getter functions
 
-(defn get-current-board [!db] (first @(cursor !db [:board :history])))
+(defn get-current-board [!db] @(cursor !db [:board :board]))
 
 ;; Update functions
-
-(defn undo!
-  "Performs an undo operation by popping the most recent element off the history."
-  [!db]
-  (when (< 1 (count @(cursor !db [:board :history])))
-    (swap! !db update-in [:board :history] pop)))
 
 (defn update-board!
   "Generates a new board by calling update-fn on the current board, then pushes the result onto
    the board history. Automatically handles cleaning too-large histories.
 
    Note that this enforces a boundary on the board. Once tiles reach the boundary, patterns will decohere.
-   However, this boundary can be quite large.
-
-   TODO - should cleaning too-large histories be done with a separate do! operation?"
+   However, this boundary can be quite large."
   [!db update-fn]
-  (let [min-history @(cursor !db [:board :min-history])
-        max-history @(cursor !db [:board :max-history])
-        boundary @(cursor !db [:board :boundary])]
-    (swap! !db update-in [:board :history]
-           (fn [history]
-             (-> history
-                 (conj (->> history (first) (update-fn) (enforce-boundary boundary)))
-                 (drop-overflow min-history max-history)
-                 ((partial apply list)))))))
+  (let [boundary @(cursor !db [:board :boundary])]
+    (swap! !db update-in [:board :board] (comp (partial enforce-boundary boundary) update-fn))))
 
 (defn toggle-tile!
   "Mutates board cursor by inserting tile, or removing it if it already exists."
