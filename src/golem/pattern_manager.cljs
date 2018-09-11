@@ -1,5 +1,5 @@
 (ns golem.pattern_manager
-  (:require [reagent.ratom :refer [cursor]]
+  (:require [reagent.ratom :refer [cursor reaction]]
             [golem.rle :as rle]
             [cljs.spec.alpha :as s]
             [golem.board :as board]))
@@ -87,33 +87,33 @@
                     :latest-id (apply max (keys default-patterns))})
 
 
-;; Getter functions
-(defn get-pattern [!db pattern-id] @(cursor !db [:pattern-manager :patterns pattern-id]))
-(defn saved-patterns [!db] @(cursor !db [:pattern-manager :patterns]))
-(defn selected-pattern-id [!db] @(cursor !db [:pattern-manager :selected]))
-(defn selected-pattern [!db] (get (saved-patterns !db) (selected-pattern-id !db)))
-(defn latest-id [!db] @(cursor !db [:pattern-manager :latest-id]))
+;; Cursors
+(defn get-pattern [!db pattern-id] (cursor !db [:pattern-manager :patterns pattern-id]))
+(defn saved-patterns [!db] (cursor !db [:pattern-manager :patterns]))
+(defn selected-pattern-id [!db] (cursor !db [:pattern-manager :selected]))
+(defn selected-pattern [!db] (reaction (get @(saved-patterns !db) @(selected-pattern-id !db))))
+(defn latest-id [!db] (cursor !db [:pattern-manager :latest-id]))
 
 (defn export-pattern
   "Given a pattern ID, returns an RLE string interpretation of the pattern."
   [!db id]
-  (rle/gen-rle (get-pattern !db id)))
+  (rle/gen-rle @(get-pattern !db id)))
 
 ;; Updater functions
-(defn pop-id! [!db] (swap! (cursor !db [:pattern-manager :latest-id]) inc))
+(defn pop-id! [!db] (swap! (latest-id !db) inc))
  
 
 (defn import-pattern!
   "Interprets `rle-str` as a pattern and adds it to the pattern manager in `!db`. Returns the ID of the inserted pattern."
   [!db rle-str]
   (let [id (pop-id! !db)]
-    (swap! !db assoc-in [:pattern-manager :patterns id] (rle/parse-rle rle-str))
+    (swap! (saved-patterns !db) assoc id (rle/parse-rle rle-str))
     id))
 
 (defn select-pattern!
   "Chooses `pattern` as the active selection in the pattern manager in `!db`."
   [!db id]
-  (swap! !db assoc-in [:pattern-manager :selected] id))
+  (reset! (selected-pattern-id !db) id))
 
 (defn use-pattern!
   [!db {:keys [board]}]
@@ -122,7 +122,7 @@
 (defn use-selected-pattern!
   "Uses the currently-selected pattern, displaying it on the screen."
   [!db]
-  (use-pattern! !db (selected-pattern !db)))
+  (use-pattern! !db @(selected-pattern !db)))
 
 (defn select-and-use-pattern!
   "Chooses `pattern` as the active selection in the pattern manager in `!db` and displays it on the screen."

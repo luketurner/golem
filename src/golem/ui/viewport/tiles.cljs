@@ -4,7 +4,7 @@
             [golem.ui.viewport.input :refer [handle-click-event!]]
             [golem.ui.viewport.cursors :as cursors]
             [golem.ui.viewport.canvas :refer [fill-rect! set-dimensions!]]
-            [golem.board :refer [get-current-board]]))
+            [golem.board :refer [current-board]]))
 
 (defn canvas-cursor [!viewport] (cursor !viewport [:canvas :tile]))
 
@@ -37,7 +37,7 @@
 (defn component
   [!db]
   (let [!viewport (cursors/viewport !db)
-        !board (reaction (get-current-board !db))
+        !board (current-board !db)
         !canvas (canvas-cursor !viewport)]
     (run-redraw-tiles! !viewport !canvas !board)
     (fn [!db]

@@ -13,29 +13,29 @@
                     :import-ref nil
                     :export-ref nil})
 
-(defn is-open?
-  [!db]
-  @(cursor !db [:ui :sidebar :open]))
+;; Cursors
+(defn is-open? [!db] (cursor !db [:ui :sidebar :open]))
+(defn import-ref [!db] (cursor !db [:ui :sidebar :import-ref]))
+(defn export-ref [!db] (cursor !db [:ui :sidebar :export-ref]))
 
-(defn toggle! [!db] (swap! !db update-in [:ui :sidebar :open] not))
-(defn set-import-ref! [!db ref] (swap! !db assoc-in [:ui :sidebar :import-ref] ref))
-(defn set-export-ref! [!db ref] (swap! !db assoc-in [:ui :sidebar :export-ref] ref))
-(defn get-import-ref [!db] @(cursor !db [:ui :sidebar :import-ref]))
-(defn get-export-ref [!db] @(cursor !db [:ui :sidebar :export-ref]))
+;; Update functions
+(defn toggle! [!db] (swap! (is-open? !db) not))
+(defn set-import-ref! [!db ref] (reset! (import-ref !db) ref))
+(defn set-export-ref! [!db ref] (reset! (export-ref !db) ref))
 (defn import-field-content! [!db]
-  (when-let [el (get-import-ref !db)]
+  (when-let [el @(import-ref !db)]
     (->> el (.-value) (pattern-manager/import-select-and-use-pattern! !db))))
 
 (defn select-export-text!
   [!db]
-  (when-let [el (get-export-ref !db)]
+  (when-let [el @(export-ref !db)]
     (.focus el)
     (.select el)))
 
 (defn component
   [!db]
-  (let [patterns (pattern-manager/saved-patterns !db)
-        selected-pattern-id (pattern-manager/selected-pattern-id !db)]
+  (let [patterns @(pattern-manager/saved-patterns !db)
+        selected-pattern-id @(pattern-manager/selected-pattern-id !db)]
     (vec
       (concat [:div.sidebar [:h1.sidebar-header "Pattern Library"]]
               [(into [:div.sidebar-body (for [[id {:keys [name board] [dim-x dim-y] :dimensions pattern-str :pattern :as pattern}] patterns]

@@ -1,7 +1,6 @@
 (ns golem.ui.viewport
   (:require [reagent.core :as r]
             [reagent.ratom :refer [cursor run! reaction]]
-            [golem.board :refer [get-current-board update-board!]]
             [golem.ui.viewport.grid :as grid]
             [golem.ui.viewport.tiles :as tiles]
             [cljs.spec.alpha :as s]

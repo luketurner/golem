@@ -79,9 +79,8 @@
          (apply concat)
          (set))))
 
-;; Getter functions
-
-(defn get-current-board [!db] @(cursor !db [:board :board]))
+;; Cursors
+(defn current-board [!db] (cursor !db [:board :board]))
 
 ;; Update functions
 

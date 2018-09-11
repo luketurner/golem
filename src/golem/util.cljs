@@ -21,15 +21,15 @@
 
 
 (defn clear-interval!
-  "If the value at `path` in `!db` is a number, call `clearInterval` on it and set it to nil."
-  [!db path]
-  (swap! !db update-in path #(when (number? %) (js/clearInterval %) nil)))
+  "If the value in `!atom` a number, call `clearInterval` on it and set it to nil."
+  [!atom]
+  (swap! !atom #(when (number? %) (js/clearInterval %) nil)))
 
 (defn set-interval!
-  "Runs `function` every `interval` ms. Replaces the value at `path` in `!db` to the interval ID.
+  "Runs `function` every `interval` ms. Replaces the value in `!atom` to the interval ID.
    If the prior value was an interval ID, the corresponding interval will automatically be cleared."
-  [!db path interval function]
-  (swap! !db update-in path
+  [!atom interval function]
+  (swap! !atom
          (fn [old-interval-id]
            (when (number? old-interval-id)
              (js/clearInterval old-interval-id))

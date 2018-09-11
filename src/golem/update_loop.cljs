@@ -14,20 +14,21 @@
                     :enabled  true
                     :interval-id nil})
 
-;; Getter functions
-(defn is-enabled? [!db] @(cursor !db [:update-loop :enabled]))
-(defn get-fps [!db] @(cursor !db [:update-loop :fps]))
+;; Cursors
+(defn is-enabled? [!db] (cursor !db [:update-loop :enabled]))
+(defn fps [!db] (cursor !db [:update-loop :fps]))
+(defn- interval-id [!db] (cursor !db [:update-loop :interval-id]))
 
 ;; Updater functions
-(defn disable! [!db] (swap! !db assoc-in [:update-loop :enabled] false))
-(defn enable! [!db] (swap! !db assoc-in [:update-loop :enabled] true))
-(defn toggle! [!db] (swap! !db update-in [:update-loop :enabled] not))
-(defn inc-fps! [!db fps] (swap! !db update-in [:update-loop :fps] #(min 60 (+ % fps))))
+(defn disable! [!db] (reset! (is-enabled? !db) false))
+(defn enable! [!db] (reset! (is-enabled? !db) true))
+(defn toggle! [!db] (swap! (is-enabled? !db) not))
+(defn inc-fps! [!db n] (swap! (fps !db) #(min 60 (+ % n))))
 
 (defn run-loop! [!db update-fn]
-  (let [!fps (cursor !db [:update-loop :fps])
-        !enabled? (cursor !db [:update-loop :enabled])]
+  (let [!fps (fps !db)
+        !enabled? (is-enabled? !db)]
     (run!
       (if @!enabled?
-        (util/set-interval! !db [:update-loop :interval-id] (util/ceil (/ 1000 @!fps)) update-fn)
-        (util/clear-interval! !db [:update-loop :interval-id])))))
+        (util/set-interval! (interval-id !db) (util/ceil (/ 1000 @!fps)) update-fn)
+        (util/clear-interval! (interval-id !db))))))

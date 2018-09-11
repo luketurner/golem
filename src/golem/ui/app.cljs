@@ -17,7 +17,7 @@
    [:div [:a {:href "https://github.com/luketurner/golem"} "Github"]]])
 
 (defn component [!db]
-  (let [sidebar? (sidebar/is-open? !db)]
+  (let [sidebar? @(sidebar/is-open? !db)]
     [:div.app-container
       [:div.app-header-container [header/component !db]]
       [:div.app-main-container
