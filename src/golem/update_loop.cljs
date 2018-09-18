@@ -23,7 +23,7 @@
 (defn disable! [!db] (reset! (is-enabled? !db) false))
 (defn enable! [!db] (reset! (is-enabled? !db) true))
 (defn toggle! [!db] (swap! (is-enabled? !db) not))
-(defn inc-fps! [!db n] (swap! (fps !db) #(min 60 (+ % n))))
+(defn inc-fps! [!db n] (swap! (fps !db) #(min 60 (max 1 (+ % n)))))
 
 (defn run-loop! [!db update-fn]
   (let [!fps (fps !db)
