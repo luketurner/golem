@@ -1,7 +1,7 @@
 (ns golem.ui.viewport
+  (:require-macros [golem.util :refer [run-once!]])
   (:require [reagent.core :as r]
             [reagent.ratom :refer [cursor reaction]]
-            [golem.util :refer [run-once!]]
             [golem.ui.viewport.grid :as grid]
             [golem.ui.viewport.tiles :as tiles]
             [cljs.spec.alpha :as s]

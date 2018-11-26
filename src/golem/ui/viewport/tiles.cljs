@@ -1,6 +1,6 @@
 (ns golem.ui.viewport.tiles
+  (:require-macros [golem.util :refer [run-once!]])
   (:require [reagent.ratom :refer [cursor reaction]]
-            [golem.util :refer [run-once!]]
             [golem.ui.viewport.math :refer [base-length calc-origin calc-tile-range base-length tile-in-range? tile->px]]
             [golem.ui.viewport.input :refer [handle-click-event!]]
             [golem.ui.viewport.cursors :as cursors]

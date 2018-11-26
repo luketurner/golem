@@ -1,4 +1,5 @@
 (ns golem.update_loop
+  (:require-macros [golem.util :as util])
   (:require [reagent.ratom :refer [cursor]]
             [cljs.spec.alpha :as s]
             [golem.util :as util]))
