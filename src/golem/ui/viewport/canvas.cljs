@@ -1,8 +1,9 @@
 (ns golem.ui.viewport.canvas)
 
-(defn fill-rect! [ctx x y width height style]
+
+(defn fill-path! [ctx style]
   (set! (.-fillStyle ctx) style)
-  (.fillRect ctx x y width height))
+  (.fill ctx))
 
 (defn stroke-lines! [ctx coord-pairs style]
   (set! (.-strokeStyle ctx) style)
